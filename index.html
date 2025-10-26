@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>랜덤 링크 버튼</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#60a5fa;--text:#e6eef8}
+    body{font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#071122 0%, #0b1630 100%);color:var(--text);display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+    .wrap{width:min(720px,95%);background:rgba(255,255,255,0.03);padding:28px;border-radius:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    h1{margin:0 0 12px;font-size:20px}
+    p{margin:0 0 18px;opacity:0.85}
+    .controls{display:flex;gap:12px;flex-wrap:wrap}
+    button{background:linear-gradient(180deg,var(--accent),#3b82f6);border:0;padding:12px 16px;border-radius:10px;color: #082033;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(59,130,246,0.25)}
+    .small{padding:8px 10px;font-size:14px}
+    .info{margin-top:14px;font-size:13px;color:rgba(230,238,248,0.8)}
+    .links-list{margin-top:12px;max-height:180px;overflow:auto;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;font-size:13px}
+    .error{color:#ffb4b4}
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <h1>랜덤 링크 열기</h1>
+    <p>버튼을 누르면 등록된 CSV 파일에서 링크를 무작위로 골라 새 탭으로 엽니다.</p>
+
+    <div class="controls">
+      <button id="randomBtn">🔀 랜덤으로 열기</button>
+      <button id="openSameBtn" class="small">같은 탭에서 열기</button>
+      <button id="reloadBtn" class="small">CSV 다시 불러오기</button>
+    </div>
+
+    <div class="info" id="status">CSV 파일을 불러오는 중...</div>
+
+    <div class="links-list" id="linksList" aria-live="polite"></div>
+  </div>
+
+<script>
+(async function(){
+  const csvPath = 'links.csv'; // 같은 폴더에 위치한 CSV 파일 경로 (수정 가능)
+  const statusEl = document.getElementById('status');
+  const linksListEl = document.getElementById('linksList');
+  const randomBtn = document.getElementById('randomBtn');
+  const openSameBtn = document.getElementById('openSameBtn');
+  const reloadBtn = document.getElementById('reloadBtn');
+
+  let urls = [];
+
+  async function loadCSV(){
+    statusEl.textContent = 'CSV 불러오는 중...';
+    linksListEl.textContent = '';
+    urls = [];
+
+    try {
+      const resp = await fetch(csvPath, {cache: "no-store"});
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const text = await resp.text();
+
+      // CSV 파싱 (단순: 각 줄마다 URL, 공백/주석(#) 무시)
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '' && !l.startsWith('#'));
+
+      // 허용되는 URL 형태로 필터 (단순 검사)
+      const maybeUrls = lines.map(l => {
+        // 만약 CSV에 "http..." 가 없고 도메인만 있으면 자동으로 https를 붙이려면 주석 해제
+        // if (!/^https?:\/\//i.test(l)) l = 'https://' + l;
+        return l;
+      }).filter(l => /^https?:\/\//i.test(l));
+
+      urls = maybeUrls;
+      if (urls.length === 0) {
+        statusEl.innerHTML = '<span class="error">CSV에는 사용할 수 있는 URL이 없습니다 (한 줄에 하나씩 http/https 링크).</span>';
+        return;
+      }
+
+      statusEl.textContent = `총 ${urls.length}개의 링크 불러옴.`;
+      // 링크 미리보기
+      linksListEl.innerHTML = urls.map((u,i) => `<div>${i+1}. <a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a></div>`).join('');
+    } catch (err) {
+      console.error(err);
+      statusEl.innerHTML = `<span class="error">CSV 불러오기 실패: ${err.message} — 동일 출처(CORS) 또는 파일 경로를 확인하세요.</span>`;
+    }
+  }
+
+  function pickRandom(){
+    if (!urls || urls.length === 0) return null;
+    const i = Math.floor(Math.random() * urls.length);
+    return urls[i];
+  }
+
+  randomBtn.addEventListener('click', () => {
+    const url = pickRandom();
+    if (!url) { statusEl.innerHTML = '<span class="error">링크가 없습니다.</span>'; return; }
+    // 새 탭으로 열기
+    window.open(url, '_blank', 'noopener');
+  });
+
+  openSameBtn.addEventListener('click', () => {
+    const url = pickRandom();
+    if (!url) { statusEl.innerHTML = '<span class="error">링크가 없습니다.</span>'; return; }
+    // 같은 탭에서 열기
+    location.href = url;
+  });
+
+  reloadBtn.addEventListener('click', loadCSV);
+
+  // 초기 로드
+  await loadCSV();
+})();
+</script>
+</body>
+</html>
