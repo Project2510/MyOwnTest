@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>테스트 페이지</title>
 <style>
-/* 기존 스타일 유지 */
+/* 기존 PC/기본 스타일 */
 body {
     font-family: Inter, Arial, sans-serif;
     background: linear-gradient(180deg,#071122 0%,#0b1630 100%);
@@ -22,13 +22,17 @@ body {
     gap: 24px;
     max-width: 720px;
     align-items: center;
+    /* 모바일 대비를 위해 좌우에 약간의 패딩 추가 */
+    padding: 0 15px;
 }
 .row2, .row3 {
     display: flex;
-    gap: 48px;
+    gap: 48px; /* PC 환경 간격 */
     justify-content: center;
+    width: 100%; /* 내부 버튼 배치를 위해 너비 확보 */
 }
 button {
+    /* PC 환경 고정 크기 */
     width: 200px;
     height: 200px;
     padding: 0;
@@ -45,9 +49,11 @@ button {
     align-items: center;
     text-align: center;
     line-height: 1.2;
+    /* 버튼 크기 변화를 위한 transition 추가 */
+    transition: width 0.3s, height 0.3s, font-size 0.3s, margin 0.3s;
 }
 
-/* -------------------- FAQ 스타일 -------------------- */
+/* -------------------- FAQ 스타일 (반응형에 맞게 유지) -------------------- */
 #faq-toggle-btn {
     position: fixed;
     right: 30px;
@@ -81,16 +87,15 @@ button {
     display: none;
     flex-direction: column;
     overflow-y: auto;
+    /* 모바일에서 FAQ 창 위치/크기 조정 */
+    transition: width 0.3s, right 0.3s, bottom 0.3s; 
 }
-
-/* 로딩 메시지 스타일 */
 #faq-window.loading::before {
     content: "FAQ 내용을 불러오는 중...";
     color: #94a3b8;
     text-align: center;
     padding: 20px;
 }
-
 .faq-item {
     margin-bottom: 10px;
     border-bottom: 1px solid #334155;
@@ -129,6 +134,66 @@ button {
 .faq-item.active .faq-icon {
     transform: rotate(180deg);
 }
+
+
+/* -------------------- 모바일 반응형 미디어 쿼리 시작 -------------------- */
+@media (max-width: 768px) {
+    /* 1. 컨테이너/버튼 간격 조정 */
+    .container {
+        /* 상하 패딩을 추가하여 중앙 정렬 시 상단에 여백 확보 */
+        padding: 50px 15px; 
+    }
+    .row2, .row3 {
+        /* 버튼 그룹 간격 축소 */
+        gap: 20px; 
+        /* 모바일에서는 버튼이 꽉 차게 보이도록 flex-wrap을 사용하여 다음 줄로 넘기지 않고, */
+        /* flex-grow를 사용해 가변적으로 너비를 채우도록 설정 */
+    }
+
+    /* 2. 버튼 크기 및 폰트 조정 */
+    button {
+        /* flex-grow: 1을 사용하여 남은 공간을 균등하게 분할 */
+        flex-grow: 1; 
+        /* 너비 고정 값 대신 최대 크기 설정 (유연한 크기 조절) */
+        max-width: 150px; 
+        /* 버튼 높이를 너비와 동일하게 설정하여 정사각형 유지 */
+        height: 100px; 
+        /* 폰트 크기 축소 */
+        font-size: 18px;
+        /* 내부 컨텐츠가 2줄이 될 경우를 대비해 height를 유연하게 설정 */
+        height: auto;
+        min-height: 100px;
+        padding: 15px 5px; /* 내부 여백 추가 */
+    }
+    
+    /* 3. 모바일에서 3개짜리 행을 재배치 */
+    .row3 {
+        /* 3개의 버튼이 한 줄에 다 안 들어갈 경우를 대비해 줄 바꿈 허용 */
+        flex-wrap: wrap;
+        /* 버튼을 2개씩 두 줄로 배치하기 위해 버튼의 기본 너비를 더 줄임 */
+    }
+    .row3 button {
+        /* 각 버튼이 전체 너비의 약 48%를 차지하게 하여 2개씩 배치될 공간을 확보 */
+        width: calc(50% - 10px); 
+        max-width: none; /* max-width 제한 해제 */
+    }
+
+    /* 4. FAQ 창/버튼 위치 조정 */
+    #faq-toggle-btn {
+        right: 20px;
+        bottom: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 16px;
+    }
+    #faq-window {
+        /* 화면 너비에 맞게 창 너비 조정 */
+        width: calc(100% - 40px); 
+        right: 20px;
+        bottom: 80px; /* 토글 버튼 위로 올림 */
+    }
+}
+/* -------------------- 모바일 반응형 미디어 쿼리 끝 -------------------- */
 </style>
 </head>
 <body>
@@ -155,11 +220,7 @@ button {
 // CSV 파일 경로 (여기에서 FAQ CSV 파일을 지정합니다)
 const FAQ_CSV_FILE = 'faq.csv'; 
 
-/**
- * CSV 파일을 가져와 라인 배열로 반환합니다.
- * @param {string} csvPath - CSV 파일 경로
- * @param {boolean} isFAQ - FAQ 로딩인지 여부
- */
+// 기존 fetchCSV 함수 (행렬 구조 전치 반영)
 async function fetchCSV(csvPath, isFAQ = false){
     try {
         const resp = await fetch(csvPath, {cache:"no-store"});
@@ -169,20 +230,16 @@ async function fetchCSV(csvPath, isFAQ = false){
         const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '');
         
         if (isFAQ) {
-            // 새 행렬 구조: 각 라인(행)에 콤마로 분리된 Q와 A가 쌍으로 존재
-            // 예: "Q1,A1", "Q2,A2", ...
             const qaPairs = lines.map(line => {
-                // 첫 번째 콤마만 기준으로 Q와 A 분리 (A 내용에 콤마가 있을 경우를 대비)
                 const parts = line.split(/,(.*)/s).map(p => p.trim());
                 if (parts.length >= 2) {
                     return { q: parts[0], a: parts[1] };
                 }
                 return null;
-            }).filter(pair => pair && pair.q !== '' && pair.a !== ''); // 유효한 Q/A 쌍만 필터링
+            }).filter(pair => pair && pair.q !== '' && pair.a !== '');
             
             return qaPairs;
         } else {
-            // 기존 링크 로딩 (한 줄에 하나의 URL)
             return lines.filter(l=>/^https?:\/\//i.test(l));
         }
     } catch(err){
@@ -192,13 +249,10 @@ async function fetchCSV(csvPath, isFAQ = false){
     }
 }
 
-/**
- * 링크 버튼 클릭 핸들러 (기존 로직 유지)
- */
+// 기존 handleClick 함수
 async function handleClick(event){
     const btn = event.currentTarget;
     const csvFile = btn.getAttribute('data-csv');
-    // isFAQ는 false로 호출
     const links = await fetchCSV(csvFile, false); 
     if(links.length === 0){
         alert('링크가 없습니다.');
@@ -212,16 +266,11 @@ document.querySelectorAll('button[data-csv]').forEach(btn=>{
     btn.addEventListener('click', handleClick);
 });
 
-// -------------------- 새로운 FAQ 스크립트 시작 --------------------
+// -------------------- FAQ 스크립트 (기존 로직 유지) --------------------
 
 const faqToggleBtn = document.getElementById('faq-toggle-btn');
 const faqWindow = document.getElementById('faq-window');
 
-/**
- * FAQ 항목을 생성하고 DOM에 추가합니다.
- * @param {string} question - 질문 텍스트
- * @param {string} answer - 답변 텍스트
- */
 function createFAQItem(question, answer) {
     const item = document.createElement('div');
     item.className = 'faq-item';
@@ -235,7 +284,6 @@ function createFAQItem(question, answer) {
         </div>
     `;
     item.querySelector('.faq-question').addEventListener('click', function() {
-        // 아코디언 토글 로직
         const isActive = item.classList.contains('active');
         document.querySelectorAll('#faq-window .faq-item').forEach(i => {
             i.classList.remove('active');
@@ -247,16 +295,10 @@ function createFAQItem(question, answer) {
     return item;
 }
 
-/**
- * CSV에서 FAQ 내용을 로드하여 창에 표시합니다.
- */
 async function loadFAQContent() {
     faqWindow.classList.add('loading');
-    
-    // FAQ 창을 비웁니다.
     faqWindow.innerHTML = ''; 
 
-    // isFAQ를 true로 호출하여 Q/A 쌍 배열을 가져옵니다.
     const qaPairs = await fetchCSV(FAQ_CSV_FILE, true);
 
     faqWindow.classList.remove('loading');
@@ -266,25 +308,20 @@ async function loadFAQContent() {
         return;
     }
     
-    // Q/A 쌍을 반복하며 항목을 생성하고 추가합니다.
     qaPairs.forEach(pair => {
         const item = createFAQItem(pair.q, pair.a);
         faqWindow.appendChild(item);
     });
 }
 
-// 1. FAQ 창 토글 기능
 faqToggleBtn.addEventListener('click', () => {
     const isVisible = faqWindow.style.display === 'flex';
     faqWindow.style.display = isVisible ? 'none' : 'flex';
     
-    // 창이 열릴 때만 내용을 로드합니다.
     if (!isVisible && faqWindow.children.length === 0) {
         loadFAQContent();
     }
 });
-
-// -------------------- 새로운 FAQ 스크립트 끝 --------------------
 </script>
 </body>
 </html>
