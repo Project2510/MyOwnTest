@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>랜덤 링크 버튼 모음 (2배 확대)</title>
+<title>테스트 페이지</title>
 <style>
+/* 기존 스타일 유지 */
 body {
     font-family: Inter, Arial, sans-serif;
     background: linear-gradient(180deg,#071122 0%,#0b1630 100%);
@@ -18,27 +19,18 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    gap: 48px; /* 24px * 2 = 48px */
-    max-width: 696px; 
+    gap: 24px;
+    max-width: 720px;
     align-items: center;
-    width: 100%;
 }
-.row2 {
+.row2, .row3 {
     display: flex;
-    gap: 48px; /* 24px * 2 = 48px */
-    width: 100%; 
-    justify-content: space-around; 
-}
-.row3 {
-    display: flex;
-    gap: 48px; /* 24px * 2 = 48px */
-    width: 100%; 
-    /* 3개 버튼을 양 끝에 배치하여 좌우 여백을 균일하게 맞춤 */
-    justify-content: space-between;
+    gap: 48px;
+    justify-content: center;
 }
 button {
-    width: 200px; /* 100px * 2 = 200px */
-    height: 200px; /* 100px * 2 = 200px */
+    width: 200px;
+    height: 200px;
     padding: 0;
     border-radius: 10px;
     border: none;
@@ -46,14 +38,96 @@ button {
     font-weight: 700;
     cursor: pointer;
     color: #082033;
-    box-shadow: 0 12px 36px rgba(59,130,246,0.5); /* 그림자 효과도 2배 (6px*2=12px, 18px*2=36px) */
-    font-size: 28px; /* 14px * 2 = 28px */
+    box-shadow: 0 6px 18px rgba(59,130,246,0.25);
+    font-size: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     line-height: 1.2;
-    flex-shrink: 0; 
+}
+
+/* -------------------- FAQ 스타일 -------------------- */
+#faq-toggle-btn {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #10b981;
+    color: white;
+    font-size: 20px;
+    line-height: 60px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+#faq-window {
+    position: fixed;
+    right: 30px;
+    bottom: 100px;
+    width: 350px;
+    max-height: 450px;
+    background: #1e293b;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    z-index: 999;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* 로딩 메시지 스타일 */
+#faq-window.loading::before {
+    content: "FAQ 내용을 불러오는 중...";
+    color: #94a3b8;
+    text-align: center;
+    padding: 20px;
+}
+
+.faq-item {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #334155;
+}
+.faq-question {
+    padding: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #334155;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+.faq-question:hover {
+    background-color: #475569;
+}
+.faq-answer {
+    padding: 10px;
+    background-color: #0f172a;
+    border-radius: 0 0 5px 5px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+.faq-item.active .faq-answer {
+    max-height: 200px;
+    padding: 10px;
+    margin-top: 5px;
+}
+.faq-icon {
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
 }
 </style>
 </head>
@@ -70,24 +144,62 @@ button {
     </div>
 </div>
 
+<button id="faq-toggle-btn">
+    ❓
+</button>
+
+<div id="faq-window">
+    </div>
+
 <script>
-async function fetchCSV(csvPath){
+// CSV 파일 경로 (여기에서 FAQ CSV 파일을 지정합니다)
+const FAQ_CSV_FILE = 'faq.csv'; 
+
+/**
+ * CSV 파일을 가져와 라인 배열로 반환합니다.
+ * @param {string} csvPath - CSV 파일 경로
+ * @param {boolean} isFAQ - FAQ 로딩인지 여부
+ */
+async function fetchCSV(csvPath, isFAQ = false){
     try {
         const resp = await fetch(csvPath, {cache:"no-store"});
         if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const text = await resp.text();
-        const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l!=='');
-        return lines.filter(l=>/^https?:\/\//i.test(l));
+        
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '');
+        
+        if (isFAQ) {
+            // 새 행렬 구조: 각 라인(행)에 콤마로 분리된 Q와 A가 쌍으로 존재
+            // 예: "Q1,A1", "Q2,A2", ...
+            const qaPairs = lines.map(line => {
+                // 첫 번째 콤마만 기준으로 Q와 A 분리 (A 내용에 콤마가 있을 경우를 대비)
+                const parts = line.split(/,(.*)/s).map(p => p.trim());
+                if (parts.length >= 2) {
+                    return { q: parts[0], a: parts[1] };
+                }
+                return null;
+            }).filter(pair => pair && pair.q !== '' && pair.a !== ''); // 유효한 Q/A 쌍만 필터링
+            
+            return qaPairs;
+        } else {
+            // 기존 링크 로딩 (한 줄에 하나의 URL)
+            return lines.filter(l=>/^https?:\/\//i.test(l));
+        }
     } catch(err){
         console.error(err);
+        if (isFAQ) return [];
         return [];
     }
 }
 
+/**
+ * 링크 버튼 클릭 핸들러 (기존 로직 유지)
+ */
 async function handleClick(event){
     const btn = event.currentTarget;
     const csvFile = btn.getAttribute('data-csv');
-    const links = await fetchCSV(csvFile);
+    // isFAQ는 false로 호출
+    const links = await fetchCSV(csvFile, false); 
     if(links.length === 0){
         alert('링크가 없습니다.');
         return;
@@ -99,6 +211,80 @@ async function handleClick(event){
 document.querySelectorAll('button[data-csv]').forEach(btn=>{
     btn.addEventListener('click', handleClick);
 });
+
+// -------------------- 새로운 FAQ 스크립트 시작 --------------------
+
+const faqToggleBtn = document.getElementById('faq-toggle-btn');
+const faqWindow = document.getElementById('faq-window');
+
+/**
+ * FAQ 항목을 생성하고 DOM에 추가합니다.
+ * @param {string} question - 질문 텍스트
+ * @param {string} answer - 답변 텍스트
+ */
+function createFAQItem(question, answer) {
+    const item = document.createElement('div');
+    item.className = 'faq-item';
+    item.innerHTML = `
+        <div class="faq-question">
+            ${question}
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">
+            ${answer}
+        </div>
+    `;
+    item.querySelector('.faq-question').addEventListener('click', function() {
+        // 아코디언 토글 로직
+        const isActive = item.classList.contains('active');
+        document.querySelectorAll('#faq-window .faq-item').forEach(i => {
+            i.classList.remove('active');
+        });
+        if (!isActive) {
+            item.classList.add('active');
+        }
+    });
+    return item;
+}
+
+/**
+ * CSV에서 FAQ 내용을 로드하여 창에 표시합니다.
+ */
+async function loadFAQContent() {
+    faqWindow.classList.add('loading');
+    
+    // FAQ 창을 비웁니다.
+    faqWindow.innerHTML = ''; 
+
+    // isFAQ를 true로 호출하여 Q/A 쌍 배열을 가져옵니다.
+    const qaPairs = await fetchCSV(FAQ_CSV_FILE, true);
+
+    faqWindow.classList.remove('loading');
+
+    if (qaPairs.length === 0) {
+        faqWindow.innerHTML = '<div style="padding: 20px; color: #f87171;">FAQ 내용을 불러오지 못했거나 내용이 없습니다.</div>';
+        return;
+    }
+    
+    // Q/A 쌍을 반복하며 항목을 생성하고 추가합니다.
+    qaPairs.forEach(pair => {
+        const item = createFAQItem(pair.q, pair.a);
+        faqWindow.appendChild(item);
+    });
+}
+
+// 1. FAQ 창 토글 기능
+faqToggleBtn.addEventListener('click', () => {
+    const isVisible = faqWindow.style.display === 'flex';
+    faqWindow.style.display = isVisible ? 'none' : 'flex';
+    
+    // 창이 열릴 때만 내용을 로드합니다.
+    if (!isVisible && faqWindow.children.length === 0) {
+        loadFAQContent();
+    }
+});
+
+// -------------------- 새로운 FAQ 스크립트 끝 --------------------
 </script>
 </body>
 </html>
