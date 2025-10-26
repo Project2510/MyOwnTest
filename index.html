@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>테스트 페이지 e</title>
+<title>테스트 페이지 e (PNG 버튼 버전)</title>
 <style>
 /* -------------------- 기본 스타일 -------------------- */
 body {
     font-family: Inter, Arial, sans-serif;
-    background: url('./bmp/background.png') repeat; /* ✅ 반복 배경 패턴 */
+    background: url('./png/background.png') repeat;
     color: #e6eef8;
     display: flex;
     justify-content: center;
@@ -16,14 +16,16 @@ body {
     min-height: 100vh;
     margin: 0;
 }
+
 .container {
     display: flex;
     flex-direction: column;
     gap: 48px;
-    max-width: 1200px; 
+    max-width: 1200px;
     align-items: stretch;
     padding: 0 15px;
 }
+
 .row-wrapper {
     display: flex;
     width: 100%;
@@ -31,44 +33,39 @@ body {
     gap: 60px;
     justify-content: flex-start;
 }
+
 .row-title {
-    /* color: #a5b4fc;
-    font-size: 24px;
-    font-weight: 700; */ /* 텍스트 관련 속성 제거 */
     width: 240px;
     text-align: left;
     flex-shrink: 0;
 }
+
 .button-group {
     flex: 1;
     display: flex;
     justify-content: center;
 }
+
 .row2, .row3 {
     display: flex;
-    gap: 48px; 
+    gap: 48px;
     justify-content: center;
     flex-wrap: wrap;
-    max-width: 720px; 
+    max-width: 720px;
 }
 
-/* -------------------- 버튼 스타일 -------------------- */
-button {
+/* -------------------- PNG 버튼 (이미지형) -------------------- */
+.png-button {
     width: 200px;
     height: 200px;
-    padding: 0;
+    object-fit: contain;
     border-radius: 12px;
-    border: none;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    user-select: none;
 }
-
-/* ✅ 부드럽게 확대 효과 */
-button:hover {
+.png-button:hover {
     transform: scale(1.07);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
@@ -82,7 +79,7 @@ button:hover {
     height: 60px;
     border: none;
     border-radius: 50%;
-    background: url('./bmp/FAQ.png') center/cover no-repeat; /* 💡 FAQ.png로 변경 */
+    background: url('./png/FAQ.png') center/cover no-repeat;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     z-index: 1000;
     transition: transform 0.25s ease;
@@ -144,7 +141,7 @@ button:hover {
         gap: 10px;
         align-items: center;
     }
-    button {
+    .png-button {
         width: calc(50% - 10px);
         aspect-ratio: 1 / 1;
     }
@@ -166,22 +163,24 @@ button:hover {
 <div class="container">
     <div class="row-wrapper">
         <div class="row-title">
-            <img src="./bmp/title1.png" alt="1행" style="width: 100%; height: auto;"> </div>
+            <img src="./png/title1.png" alt="1행" style="width: 100%; height: auto;">
+        </div>
         <div class="button-group">
             <div class="row2">
-                <button id="btn1" data-csv="./csv/links1.csv"></button>
-                <button id="btn2" data-csv="./csv/links2.csv"></button>
+                <img id="btn1" class="png-button" src="./png/button1.png" data-csv="./csv/links1.csv" alt="버튼 1">
+                <img id="btn2" class="png-button" src="./png/button2.png" data-csv="./csv/links2.csv" alt="버튼 2">
             </div>
         </div>
     </div>
     <div class="row-wrapper">
         <div class="row-title">
-            <img src="./bmp/title2.png" alt="2행" style="width: 100%; height: auto;"> </div>
+            <img src="./png/title2.png" alt="2행" style="width: 100%; height: auto;">
+        </div>
         <div class="button-group">
             <div class="row3">
-                <button id="btn3" data-csv="./csv/links3.csv"></button>
-                <button id="btn4" data-csv="./csv/links4.csv"></button>
-                <button id="btn5" data-csv="./csv/links5.csv"></button>
+                <img id="btn3" class="png-button" src="./png/button3.png" data-csv="./csv/links3.csv" alt="버튼 3">
+                <img id="btn4" class="png-button" src="./png/button4.png" data-csv="./csv/links4.csv" alt="버튼 4">
+                <img id="btn5" class="png-button" src="./png/button5.png" data-csv="./csv/links5.csv" alt="버튼 5">
             </div>
         </div>
     </div>
@@ -193,31 +192,23 @@ button:hover {
 <script>
 const FAQ_CSV_FILE = './csv/faq.csv';
 
-// ✅ 각 버튼에 이미지 매핑
+// ✅ PNG 이미지 매핑
 const buttonImages = {
-  btn1: './bmp/button1.bmp',
-  btn2: './bmp/button2.bmp',
-  btn3: './bmp/button3.bmp',
-  btn4: './bmp/button4.bmp',
-  btn5: './bmp/button5.bmp'
+  btn1: './bmp/button1.png',
+  btn2: './bmp/button2.png',
+  btn3: './bmp/button3.png',
+  btn4: './bmp/button4.png',
+  btn5: './bmp/button5.png'
 };
 
-// ✅ 클릭 시 사용할 클릭 이미지
+// ✅ 클릭 시 PNG 교체 이미지
 const buttonClickImages = {
-  btn1: './bmp/button1_click.bmp',
-  btn2: './bmp/button2_click.bmp',
-  btn3: './bmp/button3_click.bmp',
-  btn4: './bmp/button4_click.bmp',
-  btn5: './bmp/button5_click.bmp'
+  btn1: './bmp/button1_click.png',
+  btn2: './bmp/button2_click.png',
+  btn3: './bmp/button3_click.png',
+  btn4: './bmp/button4_click.png',
+  btn5: './bmp/button5_click.png'
 };
-
-// 버튼 배경 설정
-Object.keys(buttonImages).forEach(id => {
-  const btn = document.getElementById(id);
-  if (btn) {
-    btn.style.backgroundImage = `url('${buttonImages[id]}')`;
-  }
-});
 
 // -------------------- CSV 파서 --------------------
 function parseCSVLine(line) {
@@ -240,7 +231,7 @@ function parseCSVLine(line) {
   return result;
 }
 
-// -------------------- CSV 로딩 함수 --------------------
+// -------------------- CSV 로딩 --------------------
 async function fetchCSV(csvPath, isFAQ = false) {
   try {
     const resp = await fetch(csvPath, { cache: "no-store" });
@@ -249,26 +240,17 @@ async function fetchCSV(csvPath, isFAQ = false) {
     const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '');
 
     if (isFAQ) {
-      // FAQ는 그대로
-      const qaPairs = lines.map(line => {
+      return lines.map(line => {
         const parts = parseCSVLine(line);
-        if (parts.length >= 2) {
+        if (parts.length >= 2)
           return { q: parts[0], a: parts[1], tags: parts.slice(2) };
-        }
-        return null;
       }).filter(Boolean);
-      return qaPairs;
     } else {
-      // 랜덤 링크용
-      const links = lines.map(line => {
+      return lines.map(line => {
         const parts = parseCSVLine(line);
         if (parts.length === 0) return null;
-        return {
-          url: parts[0],
-          tags: parts.slice(1)
-        };
+        return { url: parts[0], tags: parts.slice(1) };
       }).filter(item => item && /^https?:\/\//i.test(item.url));
-      return links;
     }
   } catch (err) {
     console.error(err);
@@ -276,11 +258,11 @@ async function fetchCSV(csvPath, isFAQ = false) {
   }
 }
 
-// -------------------- 버튼 클릭 동작 --------------------
+// -------------------- 클릭 동작 --------------------
 async function handleClick(event) {
-  const btn = event.currentTarget;
-  const csvFile = btn.getAttribute('data-csv');
-  const links = await fetchCSV(csvFile, false); 
+  const img = event.currentTarget;
+  const csvFile = img.getAttribute('data-csv');
+  const links = await fetchCSV(csvFile, false);
   if (links.length === 0) {
     alert('링크가 없습니다.');
     return;
@@ -288,22 +270,23 @@ async function handleClick(event) {
   const randIndex = Math.floor(Math.random() * links.length);
   window.open(links[randIndex].url, '_blank', 'noopener');
 
-  // ✅ 클릭 시 이미지 교체 후 복귀
-  const id = btn.id;
+  // 클릭 시 PNG 교체 후 복귀
+  const id = img.id;
   if (buttonClickImages[id]) {
-    btn.style.backgroundImage = `url('${buttonClickImages[id]}')`;
+    const original = buttonImages[id];
+    img.src = buttonClickImages[id];
     setTimeout(() => {
-      btn.style.backgroundImage = `url('${buttonImages[id]}')`;
-    }, 180); // 0.18초 후 원복
+      img.src = original;
+    }, 180);
   }
 }
 
 // 이벤트 등록
-document.querySelectorAll('button[data-csv]').forEach(btn => {
-  btn.addEventListener('click', handleClick);
+document.querySelectorAll('.png-button').forEach(img => {
+  img.addEventListener('click', handleClick);
 });
 
-// -------------------- FAQ 로딩 --------------------
+// -------------------- FAQ --------------------
 const faqToggleBtn = document.getElementById('faq-toggle-btn');
 const faqWindow = document.getElementById('faq-window');
 
