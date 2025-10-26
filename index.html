@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>테스트 페이지</title>
+<title>테스트 페이지 b</title>
 <style>
 /* 기존 PC/기본 스타일 */
 body {
@@ -29,6 +29,8 @@ body {
     gap: 48px; 
     justify-content: center;
     width: 100%;
+    /* 모바일에서 줄바꿈이 필요하므로 flex-wrap을 기본으로 추가 */
+    flex-wrap: wrap; 
 }
 button {
     width: 200px;
@@ -50,7 +52,7 @@ button {
     transition: width 0.3s, height 0.3s, font-size 0.3s, margin 0.3s;
 }
 
-/* -------------------- FAQ 스타일 수정 (max-height 증가) -------------------- */
+/* -------------------- FAQ 스타일 -------------------- */
 #faq-toggle-btn {
     position: fixed;
     right: 30px;
@@ -116,11 +118,9 @@ button {
     border-radius: 0 0 5px 5px;
     max-height: 0;
     overflow: hidden;
-    /* transition 시간을 유지하여 부드러운 애니메이션 유지 */
     transition: max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out; 
 }
 .faq-item.active .faq-answer {
-    /* 기존 200px에서 충분히 큰 값으로 변경하여 어떤 답변이든 모두 보이도록 함 */
     max-height: 500px; 
     padding: 10px;
     margin-top: 5px;
@@ -134,29 +134,45 @@ button {
 }
 
 
-/* 모바일 반응형 미디어 쿼리 (기존 유지) */
+/* -------------------- 모바일 반응형 미디어 쿼리 수정 시작 -------------------- */
 @media (max-width: 768px) {
+    /* 1. 컨테이너/버튼 간격 조정 */
     .container {
         padding: 50px 15px; 
     }
     .row2, .row3 {
-        gap: 20px; 
+        gap: 20px; /* 버튼 간격 축소 */
     }
+
+    /* 2. 공통 버튼 스타일 */
     button {
-        flex-grow: 1; 
-        max-width: 150px; 
-        font-size: 18px;
+        /* 유연한 크기 대신, 50% 너비를 기준으로 계산 */
+        flex-grow: 0; 
+        max-width: none;
         height: auto;
         min-height: 100px;
+        font-size: 18px;
         padding: 15px 5px;
     }
-    .row3 {
-        flex-wrap: wrap;
+    
+    /* 3. row2 (2개 버튼) 배치 */
+    .row2 button {
+        /* 2개의 버튼이 한 줄에 보일 수 있도록 50%에서 간격을 제외한 너비 할당 */
+        width: calc(50% - 10px); /* (100% - 20px 간격) / 2 = 50% - 10px */
     }
+
+    /* 4. row3 (3개 버튼) 배치 */
+    /* row3에 flex-wrap이 적용되어 있으므로, 50% 너비를 할당하면 2개씩 줄 바꿈이 발생합니다. */
     .row3 button {
-        width: calc(50% - 10px); 
-        max-width: none;
+        width: calc(50% - 10px); /* 2개씩 배치되도록 50% 너비 할당 */
+        margin-bottom: 20px; /* 줄 바꿈이 발생할 때 다음 줄과 간격을 만듬 */
     }
+    /* 마지막 버튼 그룹 (3개짜리 중 남은 1개)의 간격 제거 */
+    .row3 button:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* 5. FAQ 창/버튼 위치 조정 */
     #faq-toggle-btn {
         right: 20px;
         bottom: 20px;
@@ -170,6 +186,7 @@ button {
         bottom: 80px;
     }
 }
+/* -------------------- 모바일 반응형 미디어 쿼리 수정 끝 -------------------- */
 </style>
 </head>
 <body>
@@ -259,12 +276,10 @@ function createFAQItem(question, answer) {
     item.querySelector('.faq-question').addEventListener('click', function() {
         const isActive = item.classList.contains('active');
         
-        // **모든 항목을 닫아 완전히 닫힌 상태를 보장**
         document.querySelectorAll('#faq-window .faq-item').forEach(i => {
             i.classList.remove('active');
         });
 
-        // 클릭된 항목이 닫혀있지 않았다면 (즉, 현재 닫는 동작이 아니라면) 열기
         if (!isActive) {
             item.classList.add('active');
         }
@@ -274,8 +289,6 @@ function createFAQItem(question, answer) {
 
 async function loadFAQContent() {
     faqWindow.classList.add('loading');
-    
-    // **로딩 시 기존 내용이 있다면 모두 제거하여 초기 닫힘 상태 보장**
     faqWindow.innerHTML = ''; 
 
     const qaPairs = await fetchCSV(FAQ_CSV_FILE, true);
