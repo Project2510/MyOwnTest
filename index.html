@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>테스트 페이지 d</title>
+<title>테스트 페이지 e</title>
 <style>
 /* -------------------- 기본 스타일 -------------------- */
 body {
@@ -21,7 +21,7 @@ body {
     flex-direction: column;
     gap: 24px;
     max-width: 900px; 
-    align-items: stretch; /* ✅ 제목 라인 정렬 유지 */
+    align-items: stretch;
     padding: 0 15px;
 }
 .row-wrapper {
@@ -29,13 +29,13 @@ body {
     width: 100%;
     align-items: center;
     gap: 30px;
-    justify-content: flex-start; /* 제목은 왼쪽 정렬 */
+    justify-content: flex-start;
 }
 .row-title {
     color: #a5b4fc;
     font-size: 24px;
     font-weight: 700;
-    width: 120px; /* ✅ 고정 폭으로 x축 위치 통일 */
+    width: 120px;
     text-align: left;
     flex-shrink: 0;
 }
@@ -51,7 +51,7 @@ body {
 .row2, .row3 {
     display: flex;
     gap: 48px; 
-    justify-content: center; /* ✅ 중앙 유지 */
+    justify-content: center;
     flex-wrap: wrap;
     max-width: 720px; 
 }
@@ -137,14 +137,14 @@ button {
 .faq-answer {
     max-height: 0;
     overflow: hidden;
-    padding: 0; /* ✅ 완전히 닫힘 */
+    padding: 0;
     background-color: #0f172a;
     border-radius: 0 0 5px 5px;
     transition: max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out; 
 }
 .faq-item.active .faq-answer {
     max-height: 500px; 
-    padding: 10px; /* ✅ 열릴 때만 패딩 */
+    padding: 10px;
     margin-top: 5px;
 }
 .faq-icon {
@@ -230,6 +230,27 @@ button {
 <script>
 const FAQ_CSV_FILE = 'faq.csv'; 
 
+// ✅ 따옴표 포함 쉼표 파싱 지원 (FAQ + 링크 공용)
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"' && (i === 0 || line[i - 1] !== '\\')) {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
 async function fetchCSV(csvPath, isFAQ = false){
     try {
         const resp = await fetch(csvPath, {cache:"no-store"});
@@ -238,22 +259,28 @@ async function fetchCSV(csvPath, isFAQ = false){
         const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '');
         
         if (isFAQ) {
+            // ✅ FAQ 부분 그대로 유지
             const qaPairs = lines.map(line => {
-                const parts = line.split(/,(.*)/s).map(p => p.trim());
+                const parts = parseCSVLine(line);
                 if (parts.length >= 2) {
-                    return { q: parts[0], a: parts[1] };
+                    return { 
+                        q: parts[0], 
+                        a: parts[1], 
+                        tags: parts.slice(2)
+                    };
                 }
                 return null;
-            }).filter(pair => pair && pair.q !== '' && pair.a !== '');
+            }).filter(Boolean);
             return qaPairs;
         } else {
+            // ✅ 랜덤 링크용 CSV 처리
             const links = lines.map(line => {
-                const parts = parseCSVLine(line); // 따옴표 지원
+                const parts = parseCSVLine(line);
                 if (parts.length === 0) return null;
-                    return {
-                        url: parts[0],
-                        tags: parts.slice(1) // 나머지는 태그로 저장
-                    };
+                return {
+                    url: parts[0],
+                    tags: parts.slice(1)
+                };
             }).filter(item => item && /^https?:\/\//i.test(item.url));
             return links;
         }
@@ -271,8 +298,8 @@ async function handleClick(event){
         alert('링크가 없습니다.');
         return;
     }
-        const randIndex = Math.floor(Math.random() * links.length);
-        window.open(links[randIndex].url, '_blank', 'noopener');
+    const randIndex = Math.floor(Math.random() * links.length);
+    window.open(links[randIndex].url, '_blank','noopener');
 }
 
 document.querySelectorAll('button[data-csv]').forEach(btn=>{
@@ -282,7 +309,7 @@ document.querySelectorAll('button[data-csv]').forEach(btn=>{
 const faqToggleBtn = document.getElementById('faq-toggle-btn');
 const faqWindow = document.getElementById('faq-window');
 
-function createFAQItem(question, answer) {
+function createFAQItem(question, answer, tags=[]) {
     const item = document.createElement('div');
     item.className = 'faq-item';
     item.innerHTML = `
@@ -312,7 +339,7 @@ async function loadFAQContent() {
         return;
     }
     qaPairs.forEach(pair => {
-        const item = createFAQItem(pair.q, pair.a);
+        const item = createFAQItem(pair.q, pair.a, pair.tags);
         faqWindow.appendChild(item);
     });
 }
