@@ -247,7 +247,15 @@ async function fetchCSV(csvPath, isFAQ = false){
             }).filter(pair => pair && pair.q !== '' && pair.a !== '');
             return qaPairs;
         } else {
-            return lines.filter(l=>/^https?:\/\//i.test(l));
+            const links = lines.map(line => {
+                const parts = parseCSVLine(line); // 따옴표 지원
+                if (parts.length === 0) return null;
+                    return {
+                        url: parts[0],
+                        tags: parts.slice(1) // 나머지는 태그로 저장
+                    };
+            }).filter(item => item && /^https?:\/\//i.test(item.url));
+            return links;
         }
     } catch(err){
         console.error(err);
@@ -263,8 +271,8 @@ async function handleClick(event){
         alert('링크가 없습니다.');
         return;
     }
-    const randIndex = Math.floor(Math.random() * links.length);
-    window.open(links[randIndex], '_blank','noopener');
+        const randIndex = Math.floor(Math.random() * links.length);
+        window.open(links[randIndex].url, '_blank', 'noopener');
 }
 
 document.querySelectorAll('button[data-csv]').forEach(btn=>{
