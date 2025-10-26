@@ -32,9 +32,9 @@ body {
     justify-content: flex-start;
 }
 .row-title {
-    color: #a5b4fc;
+    /* color: #a5b4fc;
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 700; */ /* 텍스트 관련 속성 제거 */
     width: 120px;
     text-align: left;
     flex-shrink: 0;
@@ -82,7 +82,7 @@ button:hover {
     height: 60px;
     border: none;
     border-radius: 50%;
-    background: url('./bmp/FAQ.bmp') center/cover no-repeat;
+    background: url('./png/FAQ.png') center/cover no-repeat; /* 💡 FAQ.png로 변경 */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     z-index: 1000;
     transition: transform 0.25s ease;
@@ -165,7 +165,8 @@ button:hover {
 <body>
 <div class="container">
     <div class="row-wrapper">
-        <div class="row-title">1행</div>
+        <div class="row-title">
+            <img src="./png/title1.png" alt="1행" style="width: 100%; height: auto;"> </div>
         <div class="button-group">
             <div class="row2">
                 <button id="btn1" data-csv="./csv/links1.csv"></button>
@@ -174,7 +175,8 @@ button:hover {
         </div>
     </div>
     <div class="row-wrapper">
-        <div class="row-title">2행</div>
+        <div class="row-title">
+            <img src="./png/title2.png" alt="2행" style="width: 100%; height: auto;"> </div>
         <div class="button-group">
             <div class="row3">
                 <button id="btn3" data-csv="./csv/links3.csv"></button>
