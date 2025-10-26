@@ -22,17 +22,15 @@ body {
     gap: 24px;
     max-width: 720px;
     align-items: center;
-    /* 모바일 대비를 위해 좌우에 약간의 패딩 추가 */
     padding: 0 15px;
 }
 .row2, .row3 {
     display: flex;
-    gap: 48px; /* PC 환경 간격 */
+    gap: 48px; 
     justify-content: center;
-    width: 100%; /* 내부 버튼 배치를 위해 너비 확보 */
+    width: 100%;
 }
 button {
-    /* PC 환경 고정 크기 */
     width: 200px;
     height: 200px;
     padding: 0;
@@ -49,11 +47,10 @@ button {
     align-items: center;
     text-align: center;
     line-height: 1.2;
-    /* 버튼 크기 변화를 위한 transition 추가 */
     transition: width 0.3s, height 0.3s, font-size 0.3s, margin 0.3s;
 }
 
-/* -------------------- FAQ 스타일 (반응형에 맞게 유지) -------------------- */
+/* -------------------- FAQ 스타일 수정 (max-height 증가) -------------------- */
 #faq-toggle-btn {
     position: fixed;
     right: 30px;
@@ -87,7 +84,6 @@ button {
     display: none;
     flex-direction: column;
     overflow-y: auto;
-    /* 모바일에서 FAQ 창 위치/크기 조정 */
     transition: width 0.3s, right 0.3s, bottom 0.3s; 
 }
 #faq-window.loading::before {
@@ -120,10 +116,12 @@ button {
     border-radius: 0 0 5px 5px;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    /* transition 시간을 유지하여 부드러운 애니메이션 유지 */
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out; 
 }
 .faq-item.active .faq-answer {
-    max-height: 200px;
+    /* 기존 200px에서 충분히 큰 값으로 변경하여 어떤 답변이든 모두 보이도록 함 */
+    max-height: 500px; 
     padding: 10px;
     margin-top: 5px;
 }
@@ -136,49 +134,29 @@ button {
 }
 
 
-/* -------------------- 모바일 반응형 미디어 쿼리 시작 -------------------- */
+/* 모바일 반응형 미디어 쿼리 (기존 유지) */
 @media (max-width: 768px) {
-    /* 1. 컨테이너/버튼 간격 조정 */
     .container {
-        /* 상하 패딩을 추가하여 중앙 정렬 시 상단에 여백 확보 */
         padding: 50px 15px; 
     }
     .row2, .row3 {
-        /* 버튼 그룹 간격 축소 */
         gap: 20px; 
-        /* 모바일에서는 버튼이 꽉 차게 보이도록 flex-wrap을 사용하여 다음 줄로 넘기지 않고, */
-        /* flex-grow를 사용해 가변적으로 너비를 채우도록 설정 */
     }
-
-    /* 2. 버튼 크기 및 폰트 조정 */
     button {
-        /* flex-grow: 1을 사용하여 남은 공간을 균등하게 분할 */
         flex-grow: 1; 
-        /* 너비 고정 값 대신 최대 크기 설정 (유연한 크기 조절) */
         max-width: 150px; 
-        /* 버튼 높이를 너비와 동일하게 설정하여 정사각형 유지 */
-        height: 100px; 
-        /* 폰트 크기 축소 */
         font-size: 18px;
-        /* 내부 컨텐츠가 2줄이 될 경우를 대비해 height를 유연하게 설정 */
         height: auto;
         min-height: 100px;
-        padding: 15px 5px; /* 내부 여백 추가 */
+        padding: 15px 5px;
     }
-    
-    /* 3. 모바일에서 3개짜리 행을 재배치 */
     .row3 {
-        /* 3개의 버튼이 한 줄에 다 안 들어갈 경우를 대비해 줄 바꿈 허용 */
         flex-wrap: wrap;
-        /* 버튼을 2개씩 두 줄로 배치하기 위해 버튼의 기본 너비를 더 줄임 */
     }
     .row3 button {
-        /* 각 버튼이 전체 너비의 약 48%를 차지하게 하여 2개씩 배치될 공간을 확보 */
         width: calc(50% - 10px); 
-        max-width: none; /* max-width 제한 해제 */
+        max-width: none;
     }
-
-    /* 4. FAQ 창/버튼 위치 조정 */
     #faq-toggle-btn {
         right: 20px;
         bottom: 20px;
@@ -187,13 +165,11 @@ button {
         font-size: 16px;
     }
     #faq-window {
-        /* 화면 너비에 맞게 창 너비 조정 */
         width: calc(100% - 40px); 
         right: 20px;
-        bottom: 80px; /* 토글 버튼 위로 올림 */
+        bottom: 80px;
     }
 }
-/* -------------------- 모바일 반응형 미디어 쿼리 끝 -------------------- */
 </style>
 </head>
 <body>
@@ -217,10 +193,8 @@ button {
     </div>
 
 <script>
-// CSV 파일 경로 (여기에서 FAQ CSV 파일을 지정합니다)
 const FAQ_CSV_FILE = 'faq.csv'; 
 
-// 기존 fetchCSV 함수 (행렬 구조 전치 반영)
 async function fetchCSV(csvPath, isFAQ = false){
     try {
         const resp = await fetch(csvPath, {cache:"no-store"});
@@ -249,7 +223,6 @@ async function fetchCSV(csvPath, isFAQ = false){
     }
 }
 
-// 기존 handleClick 함수
 async function handleClick(event){
     const btn = event.currentTarget;
     const csvFile = btn.getAttribute('data-csv');
@@ -266,7 +239,7 @@ document.querySelectorAll('button[data-csv]').forEach(btn=>{
     btn.addEventListener('click', handleClick);
 });
 
-// -------------------- FAQ 스크립트 (기존 로직 유지) --------------------
+// -------------------- FAQ 스크립트 --------------------
 
 const faqToggleBtn = document.getElementById('faq-toggle-btn');
 const faqWindow = document.getElementById('faq-window');
@@ -285,9 +258,13 @@ function createFAQItem(question, answer) {
     `;
     item.querySelector('.faq-question').addEventListener('click', function() {
         const isActive = item.classList.contains('active');
+        
+        // **모든 항목을 닫아 완전히 닫힌 상태를 보장**
         document.querySelectorAll('#faq-window .faq-item').forEach(i => {
             i.classList.remove('active');
         });
+
+        // 클릭된 항목이 닫혀있지 않았다면 (즉, 현재 닫는 동작이 아니라면) 열기
         if (!isActive) {
             item.classList.add('active');
         }
@@ -297,6 +274,8 @@ function createFAQItem(question, answer) {
 
 async function loadFAQContent() {
     faqWindow.classList.add('loading');
+    
+    // **로딩 시 기존 내용이 있다면 모두 제거하여 초기 닫힘 상태 보장**
     faqWindow.innerHTML = ''; 
 
     const qaPairs = await fetchCSV(FAQ_CSV_FILE, true);
