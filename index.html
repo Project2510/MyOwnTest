@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>테스트 페이지 c</title>
+<title>테스트 페이지 d</title>
 <style>
 /* 기존 PC/기본 스타일 */
 body {
@@ -20,19 +20,42 @@ body {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    max-width: 720px;
-    align-items: center;
+    /* max-width를 720px에서 900px 정도로 늘려 제목 공간 확보 */
+    max-width: 900px; 
+    align-items: flex-start; /* 버튼 그룹들을 왼쪽 기준으로 정렬 */
     padding: 0 15px;
 }
+
+/* 새로운 제목 + 버튼 그룹 컨테이너 스타일 */
+.row-wrapper {
+    display: flex;
+    width: 100%; /* 제목과 버튼 행을 포함하는 전체 너비 */
+    align-items: center; /* 제목과 버튼 행을 수직 중앙 정렬 */
+    gap: 30px; /* 제목과 버튼 행 사이의 간격 */
+    justify-content: center; /* row-wrapper를 container 중앙에 배치 */
+}
+
+/* 제목 스타일 */
+.row-title {
+    color: #a5b4fc; /* 제목 색상 */
+    font-size: 24px;
+    font-weight: 700;
+    width: 100px; /* 제목이 차지할 고정 너비 (필요에 따라 조정) */
+    text-align: left;
+    flex-shrink: 0; /* 버튼 공간 확보를 위해 제목이 줄어들지 않도록 설정 */
+}
+
+/* 버튼 행 스타일 (제목 추가에 따라 조정) */
 .row2, .row3 {
     display: flex;
     gap: 48px; 
-    justify-content: center;
-    width: 100%;
-    /* 모바일에서 줄바꿈이 필요하므로 flex-wrap을 기본으로 추가 */
+    justify-content: flex-start; /* 버튼들을 왼쪽 기준으로 정렬 */
     flex-wrap: wrap; 
+    /* 버튼 행이 사용할 최대 너비를 설정하여 가운데 정렬 효과 유지 */
+    max-width: 720px; 
 }
 button {
+    /* PC 환경 고정 크기 */
     width: 200px;
     height: 200px;
     padding: 0;
@@ -52,7 +75,7 @@ button {
     transition: width 0.3s, height 0.3s, font-size 0.3s, margin 0.3s;
 }
 
-/* -------------------- FAQ 스타일 -------------------- */
+/* -------------------- FAQ 스타일 (기존 유지) -------------------- */
 #faq-toggle-btn {
     position: fixed;
     right: 30px;
@@ -71,7 +94,6 @@ button {
     align-items: center;
     font-weight: bold;
 }
-
 #faq-window {
     position: fixed;
     right: 30px;
@@ -136,17 +158,32 @@ button {
 
 /* -------------------- 모바일 반응형 미디어 쿼리 수정 시작 -------------------- */
 @media (max-width: 768px) {
-    /* 1. 컨테이너/버튼 간격 조정 */
-    .container {
-        padding: 50px 15px; 
+    /* 모바일에서는 제목을 중앙 정렬하고 버튼 그룹 위에 배치 */
+    .row-wrapper {
+        flex-direction: column; /* 세로로 배치 */
+        gap: 10px; /* 간격 축소 */
+        align-items: flex-start; /* 제목과 버튼 그룹을 왼쪽 기준으로 정렬 */
     }
-    .row2, .row3 {
-        gap: 20px; /* 버튼 간격 축소 */
+    .row-title {
+        width: auto; /* 너비 고정 해제 */
+        text-align: left;
+        margin-left: 10px; /* 제목을 버튼 행과 유사하게 살짝 들여쓰기 */
     }
 
-    /* 2. 공통 버튼 스타일 */
+    /* 컨테이너 너비도 줄여서 중앙 정렬 유지 */
+    .container {
+        max-width: 100%;
+        padding: 50px 15px; 
+    }
+    
+    .row2, .row3 {
+        /* 버튼 행이 컨테이너 너비를 모두 사용하도록 수정 */
+        width: 100%;
+        justify-content: center; /* 버튼들은 중앙으로 정렬 */
+        gap: 20px;
+    }
+
     button {
-        /* 유연한 크기 대신, 50% 너비를 기준으로 계산 */
         flex-grow: 0; 
         max-width: none;
         height: auto;
@@ -155,24 +192,17 @@ button {
         padding: 15px 5px;
     }
     
-    /* 3. row2 (2개 버튼) 배치 */
     .row2 button {
-        /* 2개의 버튼이 한 줄에 보일 수 있도록 50%에서 간격을 제외한 너비 할당 */
-        width: calc(50% - 10px); /* (100% - 20px 간격) / 2 = 50% - 10px */
+        width: calc(50% - 10px);
     }
-
-    /* 4. row3 (3개 버튼) 배치 */
-    /* row3에 flex-wrap이 적용되어 있으므로, 50% 너비를 할당하면 2개씩 줄 바꿈이 발생합니다. */
     .row3 button {
-        width: calc(50% - 10px); /* 2개씩 배치되도록 50% 너비 할당 */
-        margin-bottom: 20px; /* 줄 바꿈이 발생할 때 다음 줄과 간격을 만듬 */
+        width: calc(50% - 10px);
+        margin-bottom: 20px;
     }
-    /* 마지막 버튼 그룹 (3개짜리 중 남은 1개)의 간격 제거 */
     .row3 button:last-child {
         margin-bottom: 0;
     }
-    
-    /* 5. FAQ 창/버튼 위치 조정 */
+
     #faq-toggle-btn {
         right: 20px;
         bottom: 20px;
@@ -191,15 +221,24 @@ button {
 </head>
 <body>
 <div class="container">
-    <div class="row2">
-        <button data-csv="links1.csv">랜덤 링크 1</button>
-        <button data-csv="links2.csv">랜덤 링크 2</button>
+    
+    <div class="row-wrapper">
+        <div class="row-title">1행</div>
+        <div class="row2">
+            <button data-csv="links1.csv">랜덤 링크 1</button>
+            <button data-csv="links2.csv">랜덤 링크 2</button>
+        </div>
     </div>
-    <div class="row3">
-        <button data-csv="links3.csv">랜덤 링크 3</button>
-        <button data-csv="links4.csv">랜덤 링크 4</button>
-        <button data-csv="links5.csv">랜덤 링크 5</button>
+
+    <div class="row-wrapper">
+        <div class="row-title">2행</div>
+        <div class="row3">
+            <button data-csv="links3.csv">랜덤 링크 3</button>
+            <button data-csv="links4.csv">랜덤 링크 4</button>
+            <button data-csv="links5.csv">랜덤 링크 5</button>
+        </div>
     </div>
+
 </div>
 
 <button id="faq-toggle-btn">
@@ -210,6 +249,7 @@ button {
     </div>
 
 <script>
+// (스크립트 부분은 변경 없음. 이전 요청과 동일한 로직 유지)
 const FAQ_CSV_FILE = 'faq.csv'; 
 
 async function fetchCSV(csvPath, isFAQ = false){
@@ -255,8 +295,6 @@ async function handleClick(event){
 document.querySelectorAll('button[data-csv]').forEach(btn=>{
     btn.addEventListener('click', handleClick);
 });
-
-// -------------------- FAQ 스크립트 --------------------
 
 const faqToggleBtn = document.getElementById('faq-toggle-btn');
 const faqWindow = document.getElementById('faq-window');
