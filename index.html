@@ -15,20 +15,31 @@ body {
     min-height: 100vh;
     margin: 0;
 }
+/* 컨테이너의 flex 속성을 제거하고, 내부 버튼들을 중앙에 배치하도록 설정 */
 .container {
-    display: grid;
-    gap: 12px;
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 720px;
+    display: flex; /* 내부 요소들을 flex로 관리 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    gap: 24px; /* 버튼 그룹 간의 간격 */
+    max-width: 360px; /* 최대 너비는 유지 */
+    align-items: center; /* 버튼 그룹들을 중앙 정렬 */
 }
+/* 첫 번째 행: 2개의 버튼 */
+.row2 {
+    display: flex;
+    gap: 24px;
+    justify-content: center; /* 버튼들을 중앙 정렬 */
+}
+/* 두 번째 행: 3개의 버튼 */
 .row3 {
-    grid-column: span 2;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    display: flex;
+    gap: 24px;
+    justify-content: center; /* 버튼들을 중앙 정렬 */
 }
 button {
-    padding: 14px 18px;
+    /* 정사각형 버튼 모양을 위해 width와 height를 동일하게 설정 */
+    width: 100px; /* 버튼 너비 */
+    height: 100px; /* 버튼 높이 */
+    padding: 0; /* 내부 패딩 제거 (이미 height/width로 크기가 정해져 있으므로) */
     border-radius: 10px;
     border: none;
     background: linear-gradient(180deg,#60a5fa,#3b82f6);
@@ -36,14 +47,21 @@ button {
     cursor: pointer;
     color: #082033;
     box-shadow: 0 6px 18px rgba(59,130,246,0.25);
-    font-size: 16px;
+    font-size: 14px; /* 버튼이 정사각형이 되면서 텍스트 크기를 약간 줄임 */
+    display: flex; /* 텍스트를 버튼 중앙에 배치하기 위함 */
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* 텍스트 정렬 */
+    line-height: 1.2; /* 텍스트가 두 줄일 경우를 대비 */
 }
 </style>
 </head>
 <body>
 <div class="container">
-    <button data-csv="links1.csv">랜덤 링크 1</button>
-    <button data-csv="links2.csv">랜덤 링크 2</button>
+    <div class="row2">
+        <button data-csv="links1.csv">랜덤 링크 1</button>
+        <button data-csv="links2.csv">랜덤 링크 2</button>
+    </div>
     <div class="row3">
         <button data-csv="links3.csv">랜덤 링크 3</button>
         <button data-csv="links4.csv">랜덤 링크 4</button>
