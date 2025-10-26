@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>테스트 페이지 e</title>
+<title>테스트 페이지 d</title>
 <style>
 /* -------------------- 기본 스타일 -------------------- */
 body {
     font-family: Inter, Arial, sans-serif;
-    background: linear-gradient(180deg,#071122 0%,#0b1630 100%);
+    background: url('background.bmp') repeat; /* ✅ 반복 배경 패턴 */
     color: #e6eef8;
     display: flex;
     justify-content: center;
@@ -39,15 +39,11 @@ body {
     text-align: left;
     flex-shrink: 0;
 }
-
-/* ✅ 버튼들을 감싸는 그룹 (중앙 정렬 유지용) */
 .button-group {
     flex: 1;
     display: flex;
     justify-content: center;
 }
-
-/* 버튼 행 */
 .row2, .row3 {
     display: flex;
     gap: 48px; 
@@ -55,52 +51,55 @@ body {
     flex-wrap: wrap;
     max-width: 720px; 
 }
+
+/* -------------------- 버튼 스타일 -------------------- */
 button {
     width: 200px;
     height: 200px;
     padding: 0;
-    border-radius: 10px;
+    border-radius: 12px;
     border: none;
-    background: linear-gradient(180deg,#60a5fa,#3b82f6);
-    font-weight: 700;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     cursor: pointer;
-    color: #082033;
-    box-shadow: 0 6px 18px rgba(59,130,246,0.25);
-    font-size: 28px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    line-height: 1.2;
-    transition: width 0.3s, height 0.3s, font-size 0.3s, margin 0.3s;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* -------------------- FAQ 스타일 -------------------- */
+/* ✅ 부드럽게 확대 효과 */
+button:hover {
+    transform: scale(1.07);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* -------------------- FAQ 버튼 -------------------- */
 #faq-toggle-btn {
     position: fixed;
     right: 30px;
     bottom: 30px;
     width: 60px;
     height: 60px;
+    border: none;
     border-radius: 50%;
-    background: #10b981;
-    color: white;
-    font-size: 20px;
-    line-height: 60px;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    background: url('FAQ.bmp') center/cover no-repeat;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
+    transition: transform 0.25s ease;
+    cursor: pointer;
 }
+#faq-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+/* -------------------- FAQ 윈도우 -------------------- */
 #faq-window {
     position: fixed;
     right: 30px;
     bottom: 100px;
     width: 350px;
     max-height: 450px;
-    background: #1e293b;
+    background: rgba(30, 41, 59, 0.95);
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     padding: 15px;
@@ -108,13 +107,7 @@ button {
     display: none;
     flex-direction: column;
     overflow-y: auto;
-    transition: width 0.3s, right 0.3s, bottom 0.3s; 
-}
-#faq-window.loading::before {
-    content: "FAQ 내용을 불러오는 중...";
-    color: #94a3b8;
-    text-align: center;
-    padding: 20px;
+    color: #e2e8f0;
 }
 .faq-item {
     margin-bottom: 10px;
@@ -129,10 +122,6 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.2s;
-}
-.faq-question:hover {
-    background-color: #475569;
 }
 .faq-answer {
     max-height: 0;
@@ -140,19 +129,12 @@ button {
     padding: 0;
     background-color: #0f172a;
     border-radius: 0 0 5px 5px;
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out; 
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
 .faq-item.active .faq-answer {
-    max-height: 500px; 
+    max-height: 500px;
     padding: 10px;
     margin-top: 5px;
-}
-.faq-icon {
-    font-size: 18px;
-    transition: transform 0.3s;
-}
-.faq-item.active .faq-icon {
-    transform: rotate(180deg);
 }
 
 /* -------------------- 모바일 반응형 -------------------- */
@@ -162,36 +144,18 @@ button {
         gap: 10px;
         align-items: center;
     }
-    .row-title {
-        width: auto;
-        text-align: left;
-        margin-left: 10px;
-    }
-    .container {
-        max-width: 100%;
-        padding: 50px 15px; 
-    }
-    .row2, .row3 {
-        width: 100%;
-        justify-content: center;
-        gap: 20px;
-    }
     button {
         width: calc(50% - 10px);
-        aspect-ratio: 1 / 1; /* ✅ 정사각형 유지 */
-        flex-grow: 0; 
-        font-size: 18px;
-        padding: 15px 5px;
+        aspect-ratio: 1 / 1;
     }
     #faq-toggle-btn {
         right: 20px;
         bottom: 20px;
         width: 50px;
         height: 50px;
-        font-size: 16px;
     }
     #faq-window {
-        width: calc(100% - 40px); 
+        width: calc(100% - 40px);
         right: 20px;
         bottom: 80px;
     }
@@ -200,37 +164,60 @@ button {
 </head>
 <body>
 <div class="container">
-    
     <div class="row-wrapper">
         <div class="row-title">1행</div>
         <div class="button-group">
             <div class="row2">
-                <button data-csv="links1.csv">랜덤 링크 1</button>
-                <button data-csv="links2.csv">랜덤 링크 2</button>
+                <button id="btn1" data-csv="links1.csv"></button>
+                <button id="btn2" data-csv="links2.csv"></button>
             </div>
         </div>
     </div>
-
     <div class="row-wrapper">
         <div class="row-title">2행</div>
         <div class="button-group">
             <div class="row3">
-                <button data-csv="links3.csv">랜덤 링크 3</button>
-                <button data-csv="links4.csv">랜덤 링크 4</button>
-                <button data-csv="links5.csv">랜덤 링크 5</button>
+                <button id="btn3" data-csv="links3.csv"></button>
+                <button id="btn4" data-csv="links4.csv"></button>
+                <button id="btn5" data-csv="links5.csv"></button>
             </div>
         </div>
     </div>
-
 </div>
 
-<button id="faq-toggle-btn">❓</button>
+<button id="faq-toggle-btn"></button>
 <div id="faq-window"></div>
 
 <script>
-const FAQ_CSV_FILE = 'faq.csv'; 
+const FAQ_CSV_FILE = 'faq.csv';
 
-// ✅ 따옴표 포함 쉼표 파싱 지원 (FAQ + 링크 공용)
+// ✅ 각 버튼에 이미지 매핑
+const buttonImages = {
+  btn1: 'button1.bmp',
+  btn2: 'button2.bmp',
+  btn3: 'button3.bmp',
+  btn4: 'button4.bmp',
+  btn5: 'button5.bmp'
+};
+
+// ✅ 클릭 시 사용할 클릭 이미지
+const buttonClickImages = {
+  btn1: 'button1_click.bmp',
+  btn2: 'button2_click.bmp',
+  btn3: 'button3_click.bmp',
+  btn4: 'button4_click.bmp',
+  btn5: 'button5_click.bmp'
+};
+
+// 버튼 배경 설정
+Object.keys(buttonImages).forEach(id => {
+  const btn = document.getElementById(id);
+  if (btn) {
+    btn.style.backgroundImage = `url('${buttonImages[id]}')`;
+  }
+});
+
+// -------------------- CSV 파서 --------------------
 function parseCSVLine(line) {
   const result = [];
   let current = '';
@@ -251,103 +238,109 @@ function parseCSVLine(line) {
   return result;
 }
 
-async function fetchCSV(csvPath, isFAQ = false){
-    try {
-        const resp = await fetch(csvPath, {cache:"no-store"});
-        if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const text = await resp.text();
-        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '');
-        
-        if (isFAQ) {
-            // ✅ FAQ 부분 그대로 유지
-            const qaPairs = lines.map(line => {
-                const parts = parseCSVLine(line);
-                if (parts.length >= 2) {
-                    return { 
-                        q: parts[0], 
-                        a: parts[1], 
-                        tags: parts.slice(2)
-                    };
-                }
-                return null;
-            }).filter(Boolean);
-            return qaPairs;
-        } else {
-            // ✅ 랜덤 링크용 CSV 처리
-            const links = lines.map(line => {
-                const parts = parseCSVLine(line);
-                if (parts.length === 0) return null;
-                return {
-                    url: parts[0],
-                    tags: parts.slice(1)
-                };
-            }).filter(item => item && /^https?:\/\//i.test(item.url));
-            return links;
+// -------------------- CSV 로딩 함수 --------------------
+async function fetchCSV(csvPath, isFAQ = false) {
+  try {
+    const resp = await fetch(csvPath, { cache: "no-store" });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '');
+
+    if (isFAQ) {
+      // FAQ는 그대로
+      const qaPairs = lines.map(line => {
+        const parts = parseCSVLine(line);
+        if (parts.length >= 2) {
+          return { q: parts[0], a: parts[1], tags: parts.slice(2) };
         }
-    } catch(err){
-        console.error(err);
-        return [];
+        return null;
+      }).filter(Boolean);
+      return qaPairs;
+    } else {
+      // 랜덤 링크용
+      const links = lines.map(line => {
+        const parts = parseCSVLine(line);
+        if (parts.length === 0) return null;
+        return {
+          url: parts[0],
+          tags: parts.slice(1)
+        };
+      }).filter(item => item && /^https?:\/\//i.test(item.url));
+      return links;
     }
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }
 
-async function handleClick(event){
-    const btn = event.currentTarget;
-    const csvFile = btn.getAttribute('data-csv');
-    const links = await fetchCSV(csvFile, false); 
-    if(links.length === 0){
-        alert('링크가 없습니다.');
-        return;
-    }
-    const randIndex = Math.floor(Math.random() * links.length);
-    window.open(links[randIndex].url, '_blank','noopener');
+// -------------------- 버튼 클릭 동작 --------------------
+async function handleClick(event) {
+  const btn = event.currentTarget;
+  const csvFile = btn.getAttribute('data-csv');
+  const links = await fetchCSV(csvFile, false); 
+  if (links.length === 0) {
+    alert('링크가 없습니다.');
+    return;
+  }
+  const randIndex = Math.floor(Math.random() * links.length);
+  window.open(links[randIndex].url, '_blank', 'noopener');
+
+  // ✅ 클릭 시 이미지 교체 후 복귀
+  const id = btn.id;
+  if (buttonClickImages[id]) {
+    btn.style.backgroundImage = `url('${buttonClickImages[id]}')`;
+    setTimeout(() => {
+      btn.style.backgroundImage = `url('${buttonImages[id]}')`;
+    }, 180); // 0.18초 후 원복
+  }
 }
 
-document.querySelectorAll('button[data-csv]').forEach(btn=>{
-    btn.addEventListener('click', handleClick);
+// 이벤트 등록
+document.querySelectorAll('button[data-csv]').forEach(btn => {
+  btn.addEventListener('click', handleClick);
 });
 
+// -------------------- FAQ 로딩 --------------------
 const faqToggleBtn = document.getElementById('faq-toggle-btn');
 const faqWindow = document.getElementById('faq-window');
 
-function createFAQItem(question, answer, tags=[]) {
-    const item = document.createElement('div');
-    item.className = 'faq-item';
-    item.innerHTML = `
-        <div class="faq-question">
-            ${question}
-            <span class="faq-icon">▼</span>
-        </div>
-        <div class="faq-answer">
-            ${answer}
-        </div>
-    `;
-    item.querySelector('.faq-question').addEventListener('click', function() {
-        const isActive = item.classList.contains('active');
-        document.querySelectorAll('#faq-window .faq-item').forEach(i => i.classList.remove('active'));
-        if (!isActive) item.classList.add('active');
-    });
-    return item;
+function createFAQItem(question, answer, tags = []) {
+  const item = document.createElement('div');
+  item.className = 'faq-item';
+  item.innerHTML = `
+      <div class="faq-question">
+          ${question}
+          <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer">${answer}</div>
+  `;
+  item.querySelector('.faq-question').addEventListener('click', function () {
+    const isActive = item.classList.contains('active');
+    document.querySelectorAll('#faq-window .faq-item').forEach(i => i.classList.remove('active'));
+    if (!isActive) item.classList.add('active');
+  });
+  return item;
 }
 
 async function loadFAQContent() {
-    faqWindow.classList.add('loading');
-    faqWindow.innerHTML = ''; 
-    const qaPairs = await fetchCSV(FAQ_CSV_FILE, true);
-    faqWindow.classList.remove('loading');
-    if (qaPairs.length === 0) {
-        faqWindow.innerHTML = '<div style="padding: 20px; color: #f87171;">FAQ 내용을 불러오지 못했거나 내용이 없습니다.</div>';
-        return;
-    }
-    qaPairs.forEach(pair => {
-        const item = createFAQItem(pair.q, pair.a, pair.tags);
-        faqWindow.appendChild(item);
-    });
+  faqWindow.innerHTML = '<div style="padding: 20px; color: #94a3b8;">FAQ 내용을 불러오는 중...</div>';
+  const qaPairs = await fetchCSV(FAQ_CSV_FILE, true);
+  faqWindow.innerHTML = '';
+  if (qaPairs.length === 0) {
+    faqWindow.innerHTML = '<div style="padding: 20px; color: #f87171;">FAQ 내용을 불러오지 못했거나 내용이 없습니다.</div>';
+    return;
+  }
+  qaPairs.forEach(pair => {
+    const item = createFAQItem(pair.q, pair.a, pair.tags);
+    faqWindow.appendChild(item);
+  });
 }
 
 faqToggleBtn.addEventListener('click', () => {
-    const isVisible = faqWindow.style.display === 'flex';
-    faqWindow.style.display = isVisible ? 'none' : 'flex';
-    if (!isVisible && faqWindow.children.length === 0) loadFAQContent();
+  const isVisible = faqWindow.style.display === 'flex';
+  faqWindow.style.display = isVisible ? 'none' : 'flex';
+  if (!isVisible && faqWindow.children.length === 0) loadFAQContent();
 });
 </script>
 </body>
