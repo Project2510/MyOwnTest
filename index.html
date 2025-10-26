@@ -8,7 +8,7 @@
 /* -------------------- 기본 스타일 -------------------- */
 body {
     font-family: Inter, Arial, sans-serif;
-    background: url('background.bmp') repeat; /* ✅ 반복 배경 패턴 */
+    background: url('./bmp/background.bmp') repeat; /* ✅ 반복 배경 패턴 */
     color: #e6eef8;
     display: flex;
     justify-content: center;
@@ -82,7 +82,7 @@ button:hover {
     height: 60px;
     border: none;
     border-radius: 50%;
-    background: url('FAQ.bmp') center/cover no-repeat;
+    background: url('./bmp/FAQ.bmp') center/cover no-repeat;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     z-index: 1000;
     transition: transform 0.25s ease;
@@ -168,8 +168,8 @@ button:hover {
         <div class="row-title">1행</div>
         <div class="button-group">
             <div class="row2">
-                <button id="btn1" data-csv="links1.csv"></button>
-                <button id="btn2" data-csv="links2.csv"></button>
+                <button id="btn1" data-csv="./csv/links1.csv"></button>
+                <button id="btn2" data-csv="./csv/links2.csv"></button>
             </div>
         </div>
     </div>
@@ -177,9 +177,9 @@ button:hover {
         <div class="row-title">2행</div>
         <div class="button-group">
             <div class="row3">
-                <button id="btn3" data-csv="links3.csv"></button>
-                <button id="btn4" data-csv="links4.csv"></button>
-                <button id="btn5" data-csv="links5.csv"></button>
+                <button id="btn3" data-csv="./csv/links3.csv"></button>
+                <button id="btn4" data-csv="./csv/links4.csv"></button>
+                <button id="btn5" data-csv="./csv/links5.csv"></button>
             </div>
         </div>
     </div>
@@ -189,24 +189,24 @@ button:hover {
 <div id="faq-window"></div>
 
 <script>
-const FAQ_CSV_FILE = 'faq.csv';
+const FAQ_CSV_FILE = './csv/faq.csv';
 
 // ✅ 각 버튼에 이미지 매핑
 const buttonImages = {
-  btn1: 'button1.bmp',
-  btn2: 'button2.bmp',
-  btn3: 'button3.bmp',
-  btn4: 'button4.bmp',
-  btn5: 'button5.bmp'
+  btn1: './bmp/button1.bmp',
+  btn2: './bmp/button2.bmp',
+  btn3: './bmp/button3.bmp',
+  btn4: './bmp/button4.bmp',
+  btn5: './bmp/button5.bmp'
 };
 
 // ✅ 클릭 시 사용할 클릭 이미지
 const buttonClickImages = {
-  btn1: 'button1_click.bmp',
-  btn2: 'button2_click.bmp',
-  btn3: 'button3_click.bmp',
-  btn4: 'button4_click.bmp',
-  btn5: 'button5_click.bmp'
+  btn1: './bmp/button1_click.bmp',
+  btn2: './bmp/button2_click.bmp',
+  btn3: './bmp/button3_click.bmp',
+  btn4: './bmp/button4_click.bmp',
+  btn5: './bmp/button5_click.bmp'
 };
 
 // 버튼 배경 설정
