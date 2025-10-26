@@ -20,7 +20,7 @@ body {
     display: flex; /* 내부 요소들을 flex로 관리 */
     flex-direction: column; /* 세로 방향으로 정렬 */
     gap: 24px; /* 버튼 그룹 간의 간격 */
-    max-width: 360px; /* 최대 너비는 유지 */
+    max-width: 720px; /* 최대 너비는 유지 */
     align-items: center; /* 버튼 그룹들을 중앙 정렬 */
 }
 /* 첫 번째 행: 2개의 버튼 */
@@ -32,13 +32,13 @@ body {
 /* 두 번째 행: 3개의 버튼 */
 .row3 {
     display: flex;
-    gap: 24px;
+    gap: 48px;
     justify-content: center; /* 버튼들을 중앙 정렬 */
 }
 button {
     /* 정사각형 버튼 모양을 위해 width와 height를 동일하게 설정 */
-    width: 100px; /* 버튼 너비 */
-    height: 100px; /* 버튼 높이 */
+    width: 200px; /* 버튼 너비 */
+    height: 200px; /* 버튼 높이 */
     padding: 0; /* 내부 패딩 제거 (이미 height/width로 크기가 정해져 있으므로) */
     border-radius: 10px;
     border: none;
@@ -47,7 +47,7 @@ button {
     cursor: pointer;
     color: #082033;
     box-shadow: 0 6px 18px rgba(59,130,246,0.25);
-    font-size: 14px; /* 버튼이 정사각형이 되면서 텍스트 크기를 약간 줄임 */
+    font-size: 28px; /* 버튼이 정사각형이 되면서 텍스트 크기를 약간 줄임 */
     display: flex; /* 텍스트를 버튼 중앙에 배치하기 위함 */
     justify-content: center;
     align-items: center;
