@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>테스트 페이지 d</title>
 <style>
-/* 기존 PC/기본 스타일 */
+/* -------------------- 기본 스타일 -------------------- */
 body {
     font-family: Inter, Arial, sans-serif;
     background: linear-gradient(180deg,#071122 0%,#0b1630 100%);
@@ -20,42 +20,42 @@ body {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    /* max-width를 720px에서 900px 정도로 늘려 제목 공간 확보 */
     max-width: 900px; 
-    align-items: flex-start; /* 버튼 그룹들을 왼쪽 기준으로 정렬 */
+    align-items: stretch; /* ✅ 제목 라인 정렬 유지 */
     padding: 0 15px;
 }
-
-/* 새로운 제목 + 버튼 그룹 컨테이너 스타일 */
 .row-wrapper {
     display: flex;
-    width: 100%; /* 제목과 버튼 행을 포함하는 전체 너비 */
-    align-items: center; /* 제목과 버튼 행을 수직 중앙 정렬 */
-    gap: 30px; /* 제목과 버튼 행 사이의 간격 */
-    justify-content: center; /* row-wrapper를 container 중앙에 배치 */
+    width: 100%;
+    align-items: center;
+    gap: 30px;
+    justify-content: flex-start; /* 제목은 왼쪽 정렬 */
 }
-
-/* 제목 스타일 */
 .row-title {
-    color: #a5b4fc; /* 제목 색상 */
+    color: #a5b4fc;
     font-size: 24px;
     font-weight: 700;
-    width: 100px; /* 제목이 차지할 고정 너비 (필요에 따라 조정) */
+    width: 120px; /* ✅ 고정 폭으로 x축 위치 통일 */
     text-align: left;
-    flex-shrink: 0; /* 버튼 공간 확보를 위해 제목이 줄어들지 않도록 설정 */
+    flex-shrink: 0;
 }
 
-/* 버튼 행 스타일 (제목 추가에 따라 조정) */
+/* ✅ 버튼들을 감싸는 그룹 (중앙 정렬 유지용) */
+.button-group {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* 버튼 행 */
 .row2, .row3 {
     display: flex;
     gap: 48px; 
-    justify-content: flex-start; /* 버튼들을 왼쪽 기준으로 정렬 */
-    flex-wrap: wrap; 
-    /* 버튼 행이 사용할 최대 너비를 설정하여 가운데 정렬 효과 유지 */
+    justify-content: center; /* ✅ 중앙 유지 */
+    flex-wrap: wrap;
     max-width: 720px; 
 }
 button {
-    /* PC 환경 고정 크기 */
     width: 200px;
     height: 200px;
     padding: 0;
@@ -75,7 +75,7 @@ button {
     transition: width 0.3s, height 0.3s, font-size 0.3s, margin 0.3s;
 }
 
-/* -------------------- FAQ 스타일 (기존 유지) -------------------- */
+/* -------------------- FAQ 스타일 -------------------- */
 #faq-toggle-btn {
     position: fixed;
     right: 30px;
@@ -135,16 +135,16 @@ button {
     background-color: #475569;
 }
 .faq-answer {
-    padding: 10px;
-    background-color: #0f172a;
-    border-radius: 0 0 5px 5px;
     max-height: 0;
     overflow: hidden;
+    padding: 0; /* ✅ 완전히 닫힘 */
+    background-color: #0f172a;
+    border-radius: 0 0 5px 5px;
     transition: max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out; 
 }
 .faq-item.active .faq-answer {
     max-height: 500px; 
-    padding: 10px;
+    padding: 10px; /* ✅ 열릴 때만 패딩 */
     margin-top: 5px;
 }
 .faq-icon {
@@ -155,54 +155,34 @@ button {
     transform: rotate(180deg);
 }
 
-
-/* -------------------- 모바일 반응형 미디어 쿼리 수정 시작 -------------------- */
+/* -------------------- 모바일 반응형 -------------------- */
 @media (max-width: 768px) {
-    /* 모바일에서는 제목을 중앙 정렬하고 버튼 그룹 위에 배치 */
     .row-wrapper {
-        flex-direction: column; /* 세로로 배치 */
-        gap: 10px; /* 간격 축소 */
-        align-items: center; /* 제목과 버튼 그룹을 왼쪽 기준으로 정렬 */
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
     }
     .row-title {
-        width: auto; /* 너비 고정 해제 */
+        width: auto;
         text-align: left;
-        margin-left: 10px; /* 제목을 버튼 행과 유사하게 살짝 들여쓰기 */
+        margin-left: 10px;
     }
-
-    /* 컨테이너 너비도 줄여서 중앙 정렬 유지 */
     .container {
         max-width: 100%;
         padding: 50px 15px; 
     }
-    
     .row2, .row3 {
-        /* 버튼 행이 컨테이너 너비를 모두 사용하도록 수정 */
         width: 100%;
-        justify-content: center; /* 버튼들은 중앙으로 정렬 */
+        justify-content: center;
         gap: 20px;
     }
-
     button {
+        width: calc(50% - 10px);
+        aspect-ratio: 1 / 1; /* ✅ 정사각형 유지 */
         flex-grow: 0; 
-        max-width: none;
-        height: auto;
-        min-height: 100px;
         font-size: 18px;
         padding: 15px 5px;
     }
-    
-    .row2 button {
-        width: calc(50% - 10px);
-    }
-    .row3 button {
-        width: calc(50% - 10px);
-        margin-bottom: 20px;
-    }
-    .row3 button:last-child {
-        margin-bottom: 0;
-    }
-
     #faq-toggle-btn {
         right: 20px;
         bottom: 20px;
@@ -216,7 +196,6 @@ button {
         bottom: 80px;
     }
 }
-/* -------------------- 모바일 반응형 미디어 쿼리 수정 끝 -------------------- */
 </style>
 </head>
 <body>
@@ -224,32 +203,31 @@ button {
     
     <div class="row-wrapper">
         <div class="row-title">1행</div>
-        <div class="row2">
-            <button data-csv="links1.csv">랜덤 링크 1</button>
-            <button data-csv="links2.csv">랜덤 링크 2</button>
+        <div class="button-group">
+            <div class="row2">
+                <button data-csv="links1.csv">랜덤 링크 1</button>
+                <button data-csv="links2.csv">랜덤 링크 2</button>
+            </div>
         </div>
     </div>
 
     <div class="row-wrapper">
         <div class="row-title">2행</div>
-        <div class="row3">
-            <button data-csv="links3.csv">랜덤 링크 3</button>
-            <button data-csv="links4.csv">랜덤 링크 4</button>
-            <button data-csv="links5.csv">랜덤 링크 5</button>
+        <div class="button-group">
+            <div class="row3">
+                <button data-csv="links3.csv">랜덤 링크 3</button>
+                <button data-csv="links4.csv">랜덤 링크 4</button>
+                <button data-csv="links5.csv">랜덤 링크 5</button>
+            </div>
         </div>
     </div>
 
 </div>
 
-<button id="faq-toggle-btn">
-    ❓
-</button>
-
-<div id="faq-window">
-    </div>
+<button id="faq-toggle-btn">❓</button>
+<div id="faq-window"></div>
 
 <script>
-// (스크립트 부분은 변경 없음. 이전 요청과 동일한 로직 유지)
 const FAQ_CSV_FILE = 'faq.csv'; 
 
 async function fetchCSV(csvPath, isFAQ = false){
@@ -257,7 +235,6 @@ async function fetchCSV(csvPath, isFAQ = false){
         const resp = await fetch(csvPath, {cache:"no-store"});
         if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const text = await resp.text();
-        
         const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '');
         
         if (isFAQ) {
@@ -268,14 +245,12 @@ async function fetchCSV(csvPath, isFAQ = false){
                 }
                 return null;
             }).filter(pair => pair && pair.q !== '' && pair.a !== '');
-            
             return qaPairs;
         } else {
             return lines.filter(l=>/^https?:\/\//i.test(l));
         }
     } catch(err){
         console.error(err);
-        if (isFAQ) return [];
         return [];
     }
 }
@@ -313,14 +288,8 @@ function createFAQItem(question, answer) {
     `;
     item.querySelector('.faq-question').addEventListener('click', function() {
         const isActive = item.classList.contains('active');
-        
-        document.querySelectorAll('#faq-window .faq-item').forEach(i => {
-            i.classList.remove('active');
-        });
-
-        if (!isActive) {
-            item.classList.add('active');
-        }
+        document.querySelectorAll('#faq-window .faq-item').forEach(i => i.classList.remove('active'));
+        if (!isActive) item.classList.add('active');
     });
     return item;
 }
@@ -328,16 +297,12 @@ function createFAQItem(question, answer) {
 async function loadFAQContent() {
     faqWindow.classList.add('loading');
     faqWindow.innerHTML = ''; 
-
     const qaPairs = await fetchCSV(FAQ_CSV_FILE, true);
-
     faqWindow.classList.remove('loading');
-
     if (qaPairs.length === 0) {
         faqWindow.innerHTML = '<div style="padding: 20px; color: #f87171;">FAQ 내용을 불러오지 못했거나 내용이 없습니다.</div>';
         return;
     }
-    
     qaPairs.forEach(pair => {
         const item = createFAQItem(pair.q, pair.a);
         faqWindow.appendChild(item);
@@ -347,10 +312,7 @@ async function loadFAQContent() {
 faqToggleBtn.addEventListener('click', () => {
     const isVisible = faqWindow.style.display === 'flex';
     faqWindow.style.display = isVisible ? 'none' : 'flex';
-    
-    if (!isVisible && faqWindow.children.length === 0) {
-        loadFAQContent();
-    }
+    if (!isVisible && faqWindow.children.length === 0) loadFAQContent();
 });
 </script>
 </body>
