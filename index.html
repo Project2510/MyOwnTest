@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>테스트 페이지 e (PNG 버튼 버전)</title>
+<title>테스트 페이지 f</title>
 <style>
 /* -------------------- 기본 스타일 -------------------- */
 body {
@@ -54,20 +54,31 @@ body {
     max-width: 720px;
 }
 
-/* -------------------- PNG 버튼 (이미지형) -------------------- */
-.png-button {
+/* -------------------- 버튼(이미지형) -------------------- */
+.button-box {
     width: 200px;
-    height: 200px;
-    object-fit: contain;
+    aspect-ratio: 1 / 1; /* 정사각형 유지 */
     border-radius: 12px;
+    overflow: hidden;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     cursor: pointer;
     user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
 }
-.png-button:hover {
+.button-box:hover {
     transform: scale(1.07);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+.button-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 이미지 비율 유지, 여백만 남기기 */
+    display: block;
+    pointer-events: none; /* 클릭 이벤트 부모가 받게 */
 }
 
 /* -------------------- FAQ 버튼 -------------------- */
@@ -136,21 +147,36 @@ body {
 
 /* -------------------- 모바일 반응형 -------------------- */
 @media (max-width: 768px) {
+    .container {
+        padding: 0 5px;
+    }
+
     .row-wrapper {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
         align-items: center;
     }
-    .png-button {
+
+    .row2, .row3 {
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .button-box {
         width: calc(50% - 10px);
         aspect-ratio: 1 / 1;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
+
     #faq-toggle-btn {
         right: 20px;
         bottom: 20px;
         width: 50px;
         height: 50px;
     }
+
     #faq-window {
         width: calc(100% - 40px);
         right: 20px;
@@ -167,20 +193,31 @@ body {
         </div>
         <div class="button-group">
             <div class="row2">
-                <img id="btn1" class="png-button" src="./bmp/button1.png" data-csv="./csv/links1.csv" alt="버튼 1">
-                <img id="btn2" class="png-button" src="./bmp/button2.png" data-csv="./csv/links2.csv" alt="버튼 2">
+                <div class="button-box" id="btn1" data-csv="./csv/links1.csv">
+                    <img src="./bmp/button1.png" alt="버튼 1">
+                </div>
+                <div class="button-box" id="btn2" data-csv="./csv/links2.csv">
+                    <img src="./bmp/button2.png" alt="버튼 2">
+                </div>
             </div>
         </div>
     </div>
+
     <div class="row-wrapper">
         <div class="row-title">
             <img src="./bmp/title2.png" alt="2행" style="width: 100%; height: auto;">
         </div>
         <div class="button-group">
             <div class="row3">
-                <img id="btn3" class="png-button" src="./bmp/button3.png" data-csv="./csv/links3.csv" alt="버튼 3">
-                <img id="btn4" class="png-button" src="./bmp/button4.png" data-csv="./csv/links4.csv" alt="버튼 4">
-                <img id="btn5" class="png-button" src="./bmp/button5.png" data-csv="./csv/links5.csv" alt="버튼 5">
+                <div class="button-box" id="btn3" data-csv="./csv/links3.csv">
+                    <img src="./bmp/button3.png" alt="버튼 3">
+                </div>
+                <div class="button-box" id="btn4" data-csv="./csv/links4.csv">
+                    <img src="./bmp/button4.png" alt="버튼 4">
+                </div>
+                <div class="button-box" id="btn5" data-csv="./csv/links5.csv">
+                    <img src="./bmp/button5.png" alt="버튼 5">
+                </div>
             </div>
         </div>
     </div>
@@ -192,7 +229,6 @@ body {
 <script>
 const FAQ_CSV_FILE = './csv/faq.csv';
 
-// ✅ PNG 이미지 매핑
 const buttonImages = {
   btn1: './bmp/button1.png',
   btn2: './bmp/button2.png',
@@ -201,7 +237,6 @@ const buttonImages = {
   btn5: './bmp/button5.png'
 };
 
-// ✅ 클릭 시 PNG 교체 이미지
 const buttonClickImages = {
   btn1: './bmp/button1_click.png',
   btn2: './bmp/button2_click.png',
@@ -215,7 +250,6 @@ function parseCSVLine(line) {
   const result = [];
   let current = '';
   let inQuotes = false;
-
   for (let i = 0; i < line.length; i++) {
     const char = line[i];
     if (char === '"' && (i === 0 || line[i - 1] !== '\\')) {
@@ -238,7 +272,6 @@ async function fetchCSV(csvPath, isFAQ = false) {
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const text = await resp.text();
     const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '');
-
     if (isFAQ) {
       return lines.map(line => {
         const parts = parseCSVLine(line);
@@ -260,8 +293,9 @@ async function fetchCSV(csvPath, isFAQ = false) {
 
 // -------------------- 클릭 동작 --------------------
 async function handleClick(event) {
-  const img = event.currentTarget;
-  const csvFile = img.getAttribute('data-csv');
+  const box = event.currentTarget;
+  const csvFile = box.getAttribute('data-csv');
+  const img = box.querySelector('img');
   const links = await fetchCSV(csvFile, false);
   if (links.length === 0) {
     alert('링크가 없습니다.');
@@ -270,8 +304,8 @@ async function handleClick(event) {
   const randIndex = Math.floor(Math.random() * links.length);
   window.open(links[randIndex].url, '_blank', 'noopener');
 
-  // 클릭 시 PNG 교체 후 복귀
-  const id = img.id;
+  // 클릭 시 이미지 교체 후 복귀
+  const id = box.id;
   if (buttonClickImages[id]) {
     const original = buttonImages[id];
     img.src = buttonClickImages[id];
@@ -282,8 +316,8 @@ async function handleClick(event) {
 }
 
 // 이벤트 등록
-document.querySelectorAll('.png-button').forEach(img => {
-  img.addEventListener('click', handleClick);
+document.querySelectorAll('.button-box').forEach(box => {
+  box.addEventListener('click', handleClick);
 });
 
 // -------------------- FAQ --------------------
