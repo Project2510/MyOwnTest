@@ -304,7 +304,7 @@ async function handleClick(event) {
   const img = box.querySelector('img');
   const links = await fetchCSV(csvFile, false);
   if (links.length === 0) {
-    alert('링크가 없습니다.');
+    alert('링크를 불러오지 못했거나 링크가 없습니다.');
     return;
   }
   const randIndex = Math.floor(Math.random() * links.length);
@@ -349,11 +349,11 @@ function createFAQItem(question, answer, tags = []) {
 }
 
 async function loadFAQContent() {
-  faqWindow.innerHTML = '<div style="padding: 20px; color: #94a3b8;">FAQ 내용을 불러오는 중...</div>';
+  faqWindow.innerHTML = '<div style="padding: 20px; color: #94a3b8;">내용을 불러오는 중...</div>';
   const qaPairs = await fetchCSV(FAQ_CSV_FILE, true);
   faqWindow.innerHTML = '';
   if (qaPairs.length === 0) {
-    faqWindow.innerHTML = '<div style="padding: 20px; color: #f87171;">FAQ 내용을 불러오지 못했거나 내용이 없습니다.</div>';
+    faqWindow.innerHTML = '<div style="padding: 20px; color: #f87171;">내용을 불러오지 못했거나 내용이 없습니다.</div>';
     return;
   }
   qaPairs.forEach(pair => {
