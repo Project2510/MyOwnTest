@@ -262,14 +262,6 @@ const buttonImages = {
   btn5: './bmp/button5.png'
 };
 
-const buttonClickImages = {
-  btn1: './bmp/button1_click.png',
-  btn2: './bmp/button2_click.png',
-  btn3: './bmp/button3_click.png',
-  btn4: './bmp/button4_click.png',
-  btn5: './bmp/button5_click.png'
-};
-
 // -------------------- CSV 파서 --------------------
 function parseCSVLine(line) {
   const result = [];
@@ -320,7 +312,6 @@ async function fetchCSV(csvPath, isFAQ = false) {
 async function handleClick(event) {
   const box = event.currentTarget;
   const csvFile = box.getAttribute('data-csv');
-  const img = box.querySelector('img');
   const links = await fetchCSV(csvFile, false);
   if (links.length === 0) {
     alert('링크를 불러오지 못했거나 링크가 없습니다.');
@@ -328,23 +319,13 @@ async function handleClick(event) {
   }
   const randIndex = Math.floor(Math.random() * links.length);
   window.open(links[randIndex].url, '_blank', 'noopener');
-
-  // 클릭 시 이미지 교체 후 복귀
-  const id = box.id;
-  if (buttonClickImages[id]) {
-    const original = buttonImages[id];
-    img.src = buttonClickImages[id];
-    setTimeout(() => {
-      img.src = original;
-    }, 180);
-  }
 }
 
 document.querySelectorAll('.button-box').forEach(box => {
   box.addEventListener('click', handleClick);
 });
 
-// -------------------- FAQ --------------------
+// -------------------- 하단 버튼 동작 --------------------
 const faqToggleBtn = document.getElementById('faq-toggle-btn');
 const faqWindow = document.getElementById('faq-window');
 
@@ -386,7 +367,6 @@ faqToggleBtn.addEventListener('click', () => {
   if (!isVisible && faqWindow.children.length === 0) loadFAQContent();
 });
 
-/* -------------------- 추가 버튼 클릭 이벤트 -------------------- */
 document.getElementById('left-link-btn').addEventListener('click', () => {
     window.open('https://www.naver.com', '_blank', 'noopener');
 });
