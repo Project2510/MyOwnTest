@@ -57,7 +57,7 @@ body {
 /* -------------------- 버튼(이미지형) -------------------- */
 .button-box {
     width: 200px;
-    aspect-ratio: 1 / 1; /* 정사각형 유지 */
+    aspect-ratio: 1 / 1;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
@@ -76,28 +76,49 @@ body {
 .button-box img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* 이미지 비율 유지, 여백만 남기기 */
+    object-fit: contain;
     display: block;
-    pointer-events: none; /* 클릭 이벤트 부모가 받게 */
+    pointer-events: none;
 }
 
-/* -------------------- FAQ 버튼 -------------------- */
-#faq-toggle-btn {
+/* -------------------- 하단 버튼 (FAQ + 추가 2개) -------------------- */
+#faq-toggle-btn,
+#left-link-btn,
+#right-link-btn {
     position: fixed;
-    right: 30px;
-    bottom: 30px;
     width: 70px;
     height: 70px;
     border: none;
     border-radius: 50%;
-    background: url('./bmp/FAQ.png') center/cover no-repeat;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    z-index: 1000;
-    transition: transform 0.25s ease;
+    background-size: cover;
+    background-position: center;
     cursor: pointer;
+    transition: transform 0.25s ease;
+    box-shadow: none;
+    z-index: 1000;
 }
-#faq-toggle-btn:hover {
+
+#faq-toggle-btn:hover,
+#left-link-btn:hover,
+#right-link-btn:hover {
     transform: scale(1.1);
+}
+
+
+#faq-toggle-btn {
+    right: 30px;
+    bottom: 30px;
+    background-image: url('./bmp/FAQ.png');
+}
+#right-link-btn {
+    right: 110px;
+    bottom: 30px;
+    background-image: url('./bmp/FAQ.png');
+}
+#left-link-btn {
+    left: 30px;
+    bottom: 30px;
+    background-image: url('./bmp/FAQ.png');
 }
 
 /* -------------------- FAQ 윈도우 -------------------- */
@@ -108,7 +129,7 @@ body {
     width: 350px;
     max-height: 450px;
     border: 8px solid #d0c090;
-    background: rgba(255, 255, 255, 1.0);  /* FAQ 배경 색 */
+    background: rgba(255, 255, 255, 1.0);
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     padding: 15px;
@@ -116,11 +137,10 @@ body {
     display: none;
     flex-direction: column;
     overflow-y: auto;
-    color: #1b2657;  /* FAQ 폰트 색 */
+    color: #1b2657;
 }
 .faq-item {
     margin-bottom: 10px;
-    border-bottom: none;
 }
 .faq-question {
     padding: 10px;
@@ -151,26 +171,22 @@ body {
     .container {
         padding: 0 5px;
     }
-
     .row-wrapper {
         flex-direction: column;
         gap: 12px;
         align-items: center;
     }
-
     .row2, .row3 {
         gap: 10px;
         width: 100%;
         justify-content: center;
     }
-
     .button-box {
         width: calc(50% - 10px);
         aspect-ratio: 1 / 1;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
-
     #faq-window {
         right: 10px;
         left: 10px;
@@ -181,13 +197,15 @@ body {
         padding: 12px;
         border-radius: 8px;
     }
-
-    #faq-toggle-btn {
-        right: 20px;
-        bottom: 20px;
+    #faq-toggle-btn,
+    #left-link-btn,
+    #right-link-btn {
         width: 50px;
         height: 50px;
     }
+    #faq-toggle-btn { right: 20px; bottom: 20px; }
+    #right-link-btn { right: 90px; bottom: 20px; }
+    #left-link-btn { left: 20px; bottom: 20px; }
 }
 </style>
 </head>
@@ -229,6 +247,9 @@ body {
     </div>
 </div>
 
+<!-- 하단 버튼 3개 -->
+<button id="left-link-btn"></button>
+<button id="right-link-btn"></button>
 <button id="faq-toggle-btn"></button>
 <div id="faq-window"></div>
 
@@ -366,6 +387,13 @@ faqToggleBtn.addEventListener('click', () => {
   const isVisible = faqWindow.style.display === 'flex';
   faqWindow.style.display = isVisible ? 'none' : 'flex';
   if (!isVisible && faqWindow.children.length === 0) loadFAQContent();
+});
+
+document.getElementById('left-link-btn').addEventListener('click', () => {
+    window.open('https://www.naver.com', '_blank', 'noopener');
+});
+document.getElementById('right-link-btn').addEventListener('click', () => {
+    window.open('https://www.google.com', '_blank', 'noopener');
 });
 </script>
 </body>
