@@ -89,13 +89,23 @@ body {
     width: 70px;
     height: 70px;
     border: none;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
+    background: none;
+    padding: 0;
+    margin: 0;
     cursor: pointer;
     transition: transform 0.25s ease;
     box-shadow: none;
     z-index: 1000;
+}
+
+#faq-toggle-btn img,
+#left-link-btn img,
+#right-link-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
 }
 
 #faq-toggle-btn:hover,
@@ -104,22 +114,10 @@ body {
     transform: scale(1.1);
 }
 
-
-#faq-toggle-btn {
-    right: 30px;
-    bottom: 30px;
-    background-image: url('./bmp/FAQ.png');
-}
-#right-link-btn {
-    right: 110px;
-    bottom: 30px;
-    background-image: url('./bmp/FAQ.png');
-}
-#left-link-btn {
-    left: 30px;
-    bottom: 30px;
-    background-image: url('./bmp/FAQ.png');
-}
+/* 개별 위치 */
+#faq-toggle-btn { right: 30px; bottom: 30px; }
+#right-link-btn { right: 110px; bottom: 30px; }
+#left-link-btn { left: 30px; bottom: 30px; }
 
 /* -------------------- FAQ 윈도우 -------------------- */
 #faq-window {
@@ -248,9 +246,9 @@ body {
 </div>
 
 <!-- 하단 버튼 3개 -->
-<button id="left-link-btn"></button>
-<button id="right-link-btn"></button>
-<button id="faq-toggle-btn"></button>
+<button id="left-link-btn"><img src="./bmp/FAQ.png" alt="링크1"></button>
+<button id="right-link-btn"><img src="./bmp/FAQ.png" alt="링크2"></button>
+<button id="faq-toggle-btn"><img src="./bmp/FAQ.png" alt="FAQ"></button>
 <div id="faq-window"></div>
 
 <script>
@@ -318,7 +316,7 @@ async function fetchCSV(csvPath, isFAQ = false) {
   }
 }
 
-// -------------------- 클릭 동작 --------------------
+// -------------------- 중앙 버튼 동작 --------------------
 async function handleClick(event) {
   const box = event.currentTarget;
   const csvFile = box.getAttribute('data-csv');
@@ -342,7 +340,6 @@ async function handleClick(event) {
   }
 }
 
-// 이벤트 등록
 document.querySelectorAll('.button-box').forEach(box => {
   box.addEventListener('click', handleClick);
 });
@@ -389,6 +386,7 @@ faqToggleBtn.addEventListener('click', () => {
   if (!isVisible && faqWindow.children.length === 0) loadFAQContent();
 });
 
+/* -------------------- 추가 버튼 클릭 이벤트 -------------------- */
 document.getElementById('left-link-btn').addEventListener('click', () => {
     window.open('https://www.naver.com', '_blank', 'noopener');
 });
