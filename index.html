@@ -340,7 +340,9 @@ body {
 <button id="faq-toggle-btn"><img src="./img/faq.png" alt="FAQ"></button>
 
 <div id="faq-window"></div>
-<div id="mp-window"></div> <script>
+<div id="mp-window"></div> 
+
+<script>
 const FAQ_CSV_FILE = './csv/faq.csv';
 
 const buttonImages = {
@@ -475,15 +477,7 @@ async function loadFAQContent() {
   });
 }
 
-faqToggleBtn.addEventListener('click', () => {
-  const isVisible = faqWindow.style.display === 'flex';
-  faqWindow.style.display = isVisible ? 'none' : 'flex';
-  if (isVisible) mpWindow.style.display = 'none'; // FAQ 켜면 MP 끄기
-  if (!isVisible && faqWindow.children.length === 0) loadFAQContent();
-});
-
-
-// --- MP 관련 함수 (신규) ---
+// --- MP 관련 함수  ---
 function createMPItem(title, csvPath) {
   const item = document.createElement('div');
   item.className = 'mp-item';
@@ -540,15 +534,40 @@ function loadMPContent() {
   });
 }
 
-// MP 토글 버튼 클릭
+
+// --- 버튼 클릭 이벤트 핸들러  ---
+
+faqToggleBtn.addEventListener('click', () => {
+  const isVisible = faqWindow.style.display === 'flex';
+  if (isVisible) {
+    // FAQ 창을 닫음
+    faqWindow.style.display = 'none';
+  } else {
+    // FAQ 창을 엶
+    faqWindow.style.display = 'flex';
+    // **MP 창은 닫음**
+    mpWindow.style.display = 'none'; 
+    // 콘텐츠 로드 (필요시)
+    if (faqWindow.children.length === 0) {
+      loadFAQContent();
+    }
+  }
+});
+
 mpToggleBtn.addEventListener('click', () => {
   const isVisible = mpWindow.style.display === 'flex';
-  mpWindow.style.display = isVisible ? 'none' : 'flex';
-  if (isVisible) faqWindow.style.display = 'none'; // MP 켜면 FAQ 끄기
-  
-  // 처음 열 때 콘텐츠 뼈대 로드
-  if (!isVisible && mpWindow.children.length === 0) {
-    loadMPContent();
+  if (isVisible) {
+    // MP 창을 닫음
+    mpWindow.style.display = 'none';
+  } else {
+    // MP 창을 엶
+    mpWindow.style.display = 'flex';
+    // **FAQ 창은 닫음**
+    faqWindow.style.display = 'none';
+    // 콘텐츠 로드 (필요시)
+    if (mpWindow.children.length === 0) {
+      loadMPContent();
+    }
   }
 });
 
@@ -557,7 +576,6 @@ mpToggleBtn.addEventListener('click', () => {
 document.getElementById('left-link-btn').addEventListener('click', () => {
     window.open('https://github.com/project2510', '_blank', 'noopener');
 });
-// 'right-link-btn'의 기존 이벤트 핸들러는 삭제됨
 </script>
 </body>
 </html>
