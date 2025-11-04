@@ -198,12 +198,12 @@ body {
     bottom: 120px;
     width: 350px;
     max-height: 450px;
-    border: 8px solid #a0b9d0; 
+    border: 8px solid #1b2657; 
     background: rgba(255, 255, 255, 1.0);
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     padding: 15px;
-    z-index: 998; /* FAQ와 겹치지 않게 */
+    z-index: 998;
     display: none;
     flex-direction: column;
     overflow-y: auto;
@@ -216,7 +216,7 @@ body {
     padding: 10px;
     font-weight: 600;
     cursor: pointer;
-    background-color: #cee5ed;
+    background-color: #e6ebf9;
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
@@ -226,7 +226,7 @@ body {
     max-height: 0;
     overflow: hidden;
     padding: 0;
-    background-color: #eef3f5; 
+    background-color: #f5f7fd; 
     border-radius: 0 0 5px 5px;
     transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
@@ -243,11 +243,12 @@ body {
     text-decoration: none;
     border-radius: 4px;
     margin-bottom: 4px;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
+    border: 1px solid #e6ebf9;
     transition: background-color 0.2s ease;
 }
 #mp-window .mp-answer a:hover {
-    background-color: #e0e0e0;
+    background-color: #e6ebf9;
 }
 /* MP 창 로딩/에러 메시지 */
 #mp-window .mp-answer div {
@@ -593,6 +594,7 @@ document.getElementById('left-link-btn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
