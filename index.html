@@ -538,9 +538,9 @@ function createMPItem(title, csvPath) {
 function loadMPContent() {
   mpWindow.innerHTML = ''; // 초기화
   const mpItems = [
-    { title: 'mp_1', csv: './csv/links_mp_1.csv' },
-    { title: 'mp_2', csv: './csv/links_mp_2.csv' },
-    { title: 'mp_3', csv: './csv/links_mp_3.csv' }
+    { title: '만화', csv: './csv/links_mp_dj.csv' },
+    { title: '음악', csv: './csv/links_mp_music.csv' },
+    { title: '2차 창작 게임', csv: './csv/links_mp_game.csv' },
   ];
   
   mpItems.forEach(mp => {
@@ -594,6 +594,7 @@ document.getElementById('left-link-btn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
