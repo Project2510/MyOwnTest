@@ -155,7 +155,7 @@ body {
 #faq-window {
     position: fixed;
     right: 30px;
-    bottom: 120px;
+    bottom: 100px;
     width: 350px;
     max-height: 450px;
     border: 8px solid #d0c090;
@@ -183,8 +183,8 @@ body {
     align-items: center;
 }
 .faq-answer {
-    max-height: 0;
-    overflow: hidden;
+    max-height: none;
+    overflow-y: auto;
     padding: 0;
     background-color: #efeeea;
     border-radius: 0 0 5px 5px;
@@ -207,7 +207,7 @@ body {
 #mp-window {
     position: fixed;
     right: 120px;
-    bottom: 120px;
+    bottom: 100px;
     width: 350px;
     max-height: 450px;
     border: 8px solid #1b2657; 
@@ -235,8 +235,8 @@ body {
     align-items: center;
 }
 .mp-answer {
-    max-height: 0;
-    overflow: hidden;
+    max-height: none;
+    overflow-y: auto;
     padding: 0;
     background-color: #f5f7fd; 
     border-radius: 0 0 5px 5px;
@@ -278,7 +278,7 @@ body {
 #events-window {
     position: fixed;
     right: 210px;
-    bottom: 120px;
+    bottom: 100px;
     width: 350px;
     max-height: 450px;
     border: 8px solid #bb2d2d;
@@ -378,7 +378,8 @@ body {
         z-index: 1000;
         
         background-color: #bb2d2d;
-        border-top: 1px solid #4a5588;
+        box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.3);
+        border-top: none;
 
         display: flex;
         justify-content: space-between;
@@ -739,4 +740,5 @@ document.getElementById('left-link-btn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
