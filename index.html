@@ -315,6 +315,10 @@ body {
 
 /* -------------------- 모바일 반응형 -------------------- */
 @media (max-width: 768px) {
+    body {
+        padding-bottom: 80px; 
+    }
+
     .container {
         padding: 0 5px;
     }
@@ -365,7 +369,17 @@ body {
         border-radius: 8px;
     }
     
+    /* 모바일 하단 버튼 바 */
     .bottom-button-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        
+        background-color: #1b2657;
+        border-top: 1px solid #4a5588;
+
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -379,27 +393,17 @@ body {
         gap: 12px;
     }
 
-    /* 3. 모바일 버튼 스타일 수정 */
     #faq-toggle-btn,
     #left-link-btn,
     #masterpiece-btn,
     #events-toggle-btn {
-        position: static; /* fixed 해제 */
+        position: static;
         width: 50px;
         height: 50px;
-        /* 데스크톱 위치 값(left, right, bottom)을 확실히 초기화 */
         left: auto;
         right: auto;
         bottom: auto;
     }
-    
-    /* 3. 개별 위치 초기화가 위에서 처리되므로 이 부분은 필요 없음 */
-    /*
-    #faq-toggle-btn { right: auto; bottom: auto; }
-    #masterpiece-btn { right: auto; bottom: auto; }
-    #events-toggle-btn { right: auto; bottom: auto; }
-    #left-link-btn { left: auto; bottom: auto; }
-    */
 }
 </style>
 </head>
@@ -695,7 +699,6 @@ mpToggleBtn.addEventListener('click', () => {
   if (isVisible) {
     mpWindow.style.display = 'none';
   } else {
-    // 1. =f'flex' -> = 'flex' 로 오타 수정
     mpWindow.style.display = 'flex'; 
     faqWindow.style.display = 'none';
     eventsWindow.style.display = 'none';
